@@ -35,7 +35,7 @@
 <div class="login-box">
   <h3 class="text-center mb-4">Super Admin Login</h3>
 
-  <form action="SuperAdminLogin" method="post">
+  <form action="${pageContext.request.contextPath}/SuperAdminLogin" method="post">
     <div class="mb-3">
       <label class="form-label">Username</label>
       <input type="text" name="superAdminName" class="form-control" placeholder="Enter username" required>
@@ -55,9 +55,16 @@
     </button>-->
 
     <p class="text-center">
-      <a href="Login.jsp">Back to User/Admin Login</a>
+      <a href="../Login.jsp">Back to User/Admin Login</a>
     </p>
   </form>
+  
+  <% String error = (String) request.getAttribute("error"); %>
+<% if (error != null) { %>
+    <div class="alert alert-danger text-center" role="alert">
+        <%= error %>
+    </div>
+<% } %>
 </div>
 <footer>
   <p>© 2025 Biyagama Pradeshiya Sabha | Infrastructure Complaint Management System</p>

@@ -48,7 +48,7 @@
 <!-- Login -->
 <div class="login-box">
     <h3 class="text-center mb-4" id="login-title">Login</h3>
-    <form action="Dashboard" method="post">
+    <form action="${pageContext.request.contextPath}/Dashboard" method="post">
         <div class="mb-3">
             <label class="form-label" id="lbl-role">Role</label>
             <select class="form-select" name="lbl-role" required>
@@ -91,7 +91,7 @@
             "btn-login": "Login",
             "or-text": "OR",
             "google-text": "Login with Google",
-            "register-text": "New User? <a href='Register.html' class='fw-bold'>Register here</a>"
+            "register-text": "New User? <a href='Register.jsp' class='fw-bold'>Register here</a>"
         },
         si: {
             title: "පහසුකම් ගැටළු කළමනාකරණ පද්ධතිය",
@@ -106,7 +106,7 @@
             "btn-login": "ඇතුල් වන්න",
             "or-text": "හෝ",
             "google-text": "Google මඟින් ඇතුල් වන්න",
-            "register-text": "අලුත් පරිශීලකයෙක් ද? <a href='Register.html' class='fw-bold'>මෙතන ලියාපදිංචි වන්න</a>"
+            "register-text": "අලුත් පරිශීලකයෙක් ද? <a href='Register.jsp' class='fw-bold'>මෙතන ලියාපදිංචි වන්න</a>"
         },
         ta: {
             title: "அடித்தள புகார் மேலாண்மை அமைப்பு",
@@ -121,7 +121,7 @@
             "btn-login": "உள்நுழை",
             "or-text": "அல்லது",
             "google-text": "Google மூலம் உள்நுழைக",
-            "register-text": "புதிய பயனரா? <a href='Register.html' class='fw-bold'>இங்கே பதிவு செய்யவும்</a>"
+            "register-text": "புதிய பயனரா? <a href='Register.jsp' class='fw-bold'>இங்கே பதிவு செய்யவும்</a>"
         }
     };
 

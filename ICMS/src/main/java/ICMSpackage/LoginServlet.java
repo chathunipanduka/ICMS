@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("username", rs.getString("uName"));
 
                         if ("User".equalsIgnoreCase(role)) {
-                            response.sendRedirect("Dashboard.jsp");
+                            response.sendRedirect("User/UserDashboard.jsp");
                             return; // stop execution here
                         }
                     }
@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet {
                             return; // stop execution here
                         }
                     } else {
-                        response.sendRedirect("login.jsp?error=1");
+                    	request.getRequestDispatcher("/Login.jsp").forward(request, response);
                         return;
                     }
                 }
