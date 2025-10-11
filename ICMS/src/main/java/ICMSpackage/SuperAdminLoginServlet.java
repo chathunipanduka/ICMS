@@ -33,7 +33,7 @@ public class SuperAdminLoginServlet extends HttpServlet {
                     if (rs.next()) {
                         // ✅ Create session for Super Admin
                         HttpSession session = request.getSession();
-                        session.setAttribute("superAdmin", username);
+                        session.setAttribute("username", username);
 
                         // Redirect to Dashboard
                         response.sendRedirect("SupAdmin/SupAdmDashboard.jsp");

@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Super Admin Login - ICMS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="../media/ICMS.png">
   <style>
     body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
     .login-box { max-width: 400px; margin: 80px auto; background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }

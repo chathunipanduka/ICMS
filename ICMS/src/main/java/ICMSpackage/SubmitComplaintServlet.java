@@ -100,13 +100,13 @@ public class SubmitComplaintServlet extends HttpServlet {
                     // Success alert and redirect
                     out.println("<script type='text/javascript'>");
                     out.println("alert('Complaint submitted successfully!');");
-                    out.println("window.location.href='../User/SendComplaint.jsp';"); // redirect after alert
+                    out.println("window.location.href='User/SendComplaint.jsp';"); // redirect after alert
                     out.println("</script>");
                 } else {
                     // Failure alert and redirect
                     out.println("<script type='text/javascript'>");
                     out.println("alert('Failed to submit complaint! Please try again.');");
-                    out.println("window.location.href='../User/SendComplaint.jsp';"); // redirect back
+                    out.println("window.location.href='User/SendComplaint.jsp';"); // redirect back
                     out.println("</script>");
                 }
             }
