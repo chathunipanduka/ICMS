@@ -80,7 +80,7 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="Home.jsp">
-      <img src="media/logo.png" alt="Sri Lanka Logo" width="45" class="me-2">
+      <img src="media/ICMS.png" alt="Sri Lanka Logo" width="45" class="me-2">
       <span id="title">Infrastructure Complaint Management System</span>
     </a>
     <div class="d-flex">

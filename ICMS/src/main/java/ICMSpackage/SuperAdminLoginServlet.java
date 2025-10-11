@@ -36,18 +36,18 @@ public class SuperAdminLoginServlet extends HttpServlet {
                         session.setAttribute("superAdmin", username);
 
                         // Redirect to Dashboard
-                        response.sendRedirect("SupAdmDashboard.jsp");
+                        response.sendRedirect("SupAdmin/SupAdmDashboard.jsp");
                     } else {
                         // ❌ Wrong credentials → back to login
                         request.setAttribute("error", "Invalid Username or Password!");
-                        request.getRequestDispatcher("SupAdmLogin.jsp").forward(request, response);
+                        request.getRequestDispatcher("SupAdmin/SupAdmLogin.jsp").forward(request, response);
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error: " + e.getMessage());
-            request.getRequestDispatcher("SupAdmLogin.jsp").forward(request, response);
+            request.getRequestDispatcher("SupAdmin/SupAdmLogin.jsp").forward(request, response);
         }
     }
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Department Dashboard</title>
+<title>User Dashboard</title>
 
 <!-- Bootstrap 5 CSS -->
 <link
@@ -116,10 +116,10 @@ iframe {
 <body>
 
 <%
-    String username = (String) session.getAttribute("username");
+    String username = (String) session.getAttribute("superAdmin");
     if (username == null) {
         // not logged in — redirect to login page
-        response.sendRedirect(request.getContextPath() + "/Login.jsp");
+        response.sendRedirect(request.getContextPath() + "/SupAdmin/SupAdmLogin.jsp");
         return;
     }
 %>
@@ -130,8 +130,8 @@ iframe {
 			<p style="font-weight:normal; font-size:18px; "><%= username %></p>
 		</div>
 		<div class="headertitle">
-			Department of Road and Pot Hole
-			<button class="menu-btn" id="menuToggle">☰</button>
+			Infrastructure Complaint Management System
+			<button class="menu-btn" id="menuToggle">â°</button>
 		</div>
 		
         <a href="<%= request.getContextPath() %>/LogoutServlet" class="logout" target="_top">Logout</a>
@@ -139,9 +139,9 @@ iframe {
 	</header>
 
 	<div class="iframe-container">
-		<iframe src="AdminMenu.jsp" name="leftFrame" id="leftFrame"
+		<iframe src="SupAdmMenu.jsp" name="leftFrame" id="leftFrame"
 			class="left-frame"></iframe>
-		<iframe src="AdmHome.jsp" name="rightFrame" class="right-frame"></iframe>
+		<iframe src="SupAdmHome.jsp" name="rightFrame" class="right-frame"></iframe>
 	</div>
 
 	<!-- Bootstrap + JS -->

@@ -105,7 +105,7 @@
 
     <!-- Login Link -->
     <div class="text-center">
-      <small id="login-text">Already have an account? <a href="Logn.jsp" class="fw-bold">Login here</a></small>
+      <small id="login-text">Already have an account? <a href="Login.jsp" class="fw-bold">Login here</a></small>
     </div>
   </form>
 </div>

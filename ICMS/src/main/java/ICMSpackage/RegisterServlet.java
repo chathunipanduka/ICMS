@@ -68,11 +68,11 @@ public class RegisterServlet extends HttpServlet {
                     // Redirect to login page with success message
                 	out.println("<script type=\"text/javascript\">");
                     out.println("alert('Registration Successful! Please login.');");
-                    out.println("window.location.href='Login.html';");
+                    out.println("window.location.href='Login.jsp';");
                     out.println("</script>");
                 } else {
                     out.println("<div style='color:red;font-weight:bold;'>Registration Failed!</div>");
-                    out.println("<a href='Register.html'>Try Again</a>");
+                    out.println("<a href='Register.jsp'>Try Again</a>");
                 }
             }
 

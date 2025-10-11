@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Department Dashboard</title>
+<title>User Dashboard</title>
 
 <!-- Bootstrap 5 CSS -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+	<link rel="icon" type="image/x-icon" href="../media/ICMS.png">
 
 <style>
 .headertitle {
@@ -114,7 +115,6 @@ iframe {
 </style>
 </head>
 <body>
-
 <%
     String username = (String) session.getAttribute("username");
     if (username == null) {
@@ -130,8 +130,8 @@ iframe {
 			<p style="font-weight:normal; font-size:18px; "><%= username %></p>
 		</div>
 		<div class="headertitle">
-			Department of Road and Pot Hole
-			<button class="menu-btn" id="menuToggle">☰</button>
+			Infrastructure Complaint Management System
+			<button class="menu-btn" id="menuToggle">â°</button>
 		</div>
 		
         <a href="<%= request.getContextPath() %>/LogoutServlet" class="logout" target="_top">Logout</a>
@@ -139,9 +139,9 @@ iframe {
 	</header>
 
 	<div class="iframe-container">
-		<iframe src="AdminMenu.jsp" name="leftFrame" id="leftFrame"
+		<iframe src="UserMenu.jsp" name="leftFrame" id="leftFrame"
 			class="left-frame"></iframe>
-		<iframe src="AdmHome.jsp" name="rightFrame" class="right-frame"></iframe>
+		<iframe src="UserHome.jsp" name="rightFrame" class="right-frame"></iframe>
 	</div>
 
 	<!-- Bootstrap + JS -->
