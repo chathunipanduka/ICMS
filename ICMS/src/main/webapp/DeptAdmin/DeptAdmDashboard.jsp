@@ -116,12 +116,41 @@ iframe {
 </head>
 <body>
 
+
+
+<%@ page import="java.sql.*, ICMSpackage.IcmsConnection" %>
 <%
+    // Check login session
     String username = (String) session.getAttribute("username");
     if (username == null) {
-        // not logged in — redirect to login page
         response.sendRedirect(request.getContextPath() + "/Login.jsp");
         return;
+    }
+
+    // Variable to store department name
+    String deptName = "";
+
+    try {
+        // Create connection (using your custom class)
+        Connection con = IcmsConnection.getConnection();
+
+        // Prepare SQL query
+        String sql = "SELECT dept_name FROM dept_admin_tb WHERE deptAdmUname = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, username);
+
+        // Execute and retrieve department name
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            deptName = rs.getString("dept_name");
+        }
+
+        rs.close();
+        ps.close();
+        con.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
 %>
 
@@ -131,7 +160,7 @@ iframe {
 			<p style="font-weight:normal; font-size:18px; "><%= username %></p>
 		</div>
 		<div class="headertitle">
-			Department of Road and Pot Hole
+			<%= deptName %>
 			<button class="menu-btn" id="menuToggle">☰</button>
 		</div>
 		

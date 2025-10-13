@@ -1,27 +1,15 @@
 <%@ page import="java.sql.*, java.util.*, java.io.*"%>
 <%@ page import="ICMSpackage.IcmsConnection"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-
-<%
-// ✅ Check if user is logged in
-String username = (String) session.getAttribute("username");
-if (username == null) {
-	response.sendRedirect(request.getContextPath() + "/Login.jsp");
-	return;
-}
-%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>My Complaints</title>
+<title>All Complaints</title>
 
 <!-- Bootstrap CSS -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
 body {
@@ -105,8 +93,7 @@ footer {
 	<div class="container">
 		<h2>📋 All Submitted Complaints</h2>
 
-		<table
-			class="table table-bordered table-hover align-middle text-center">
+		<table class="table table-bordered table-hover align-middle text-center">
 			<thead>
 				<tr>
 					<th>ID</th>
@@ -114,6 +101,8 @@ footer {
 					<th>Description</th>
 					<th>Status</th>
 					<th>Media</th>
+					<th>User</th>
+					<th>Location</th>
 					<th>Date/Time</th>
 				</tr>
 			</thead>
@@ -125,13 +114,15 @@ footer {
 				try {
 					conn = IcmsConnection.getConnection();
 
-					// ✅ Only show complaints of the logged-in user
-					String sql = "SELECT c.id_complaint_tb, c.description, c.status, c.media, c.date_time, d.deptName "
-					+ "FROM complaint_tb c " + "LEFT JOIN dept_tb d ON c.dept_id = d.id_dept_tb "
-					+ "ORDER BY c.date_time DESC";
+					// ✅ Show all complaints
+					String sql = "SELECT c.id_complaint_tb, c.description, c.status, c.media, c.location, c.date_time, " +
+					             "d.deptName, l.uName AS username " +
+					             "FROM complaint_tb c " +
+					             "LEFT JOIN dept_tb d ON c.dept_id = d.id_dept_tb " +
+					             "LEFT JOIN login_tb l ON c.user_id = l.id_login_tb " +
+					             "ORDER BY c.date_time DESC";
 
 					ps = conn.prepareStatement(sql);
-					ps.setString(1, username);
 					rs = ps.executeQuery();
 
 					boolean hasData = false;
@@ -141,56 +132,47 @@ footer {
 						String deptName = rs.getString("deptName");
 						String desc = rs.getString("description");
 						String status = rs.getString("status");
+						String location = rs.getString("location");
+						String username = rs.getString("username");
 						Timestamp dateTime = rs.getTimestamp("date_time");
 						Blob media = rs.getBlob("media");
 				%>
 				<tr>
 					<td><%=id%></td>
-					<td><%=(deptName != null ? deptName : "N/A")%></td>
+					<td><%=deptName != null ? deptName : "N/A"%></td>
 					<td><%=desc%></td>
 					<td class="status <%=status.toLowerCase()%>"><%=status%></td>
 					<td>
 						<% if (media != null && media.length() > 0) { %>
-    <a href="ViewMediaServlet?id=<%= id %>" target="_blank">
-        <img src="ViewMediaServlet?id=<%= id %>" class="media-preview" alt="Complaint Image">
-    </a>
-<% } else { %>
-    <span class="no-media">No Media</span>
-<% } %>
+							<a href="../ViewMediaServlet?id=<%= id %>" target="_blank">
+								<img src="../ViewMediaServlet?id=<%= id %>" class="media-preview" alt="Complaint Image">
+							</a>
+						<% } else { %>
+							<span class="no-media">No Media</span>
+						<% } %>
 					</td>
+					<td><%=username != null ? username : "N/A"%></td>
+					<td><%=location != null ? location : "N/A"%></td>
 					<td><%=dateTime%></td>
 				</tr>
 				<%
-				}
+					}
 
-				if (!hasData) {
-				out.println("<tr><td colspan='6' class='text-muted'>No complaints submitted yet.</td></tr>");
-				}
+					if (!hasData) {
+						out.println("<tr><td colspan='8' class='text-muted'>No complaints submitted yet.</td></tr>");
+					}
 
 				} catch (Exception e) {
-				out.println("<tr><td colspan='6' class='text-danger'>Error: " + e.getMessage() + "</td></tr>");
+					out.println("<tr><td colspan='8' class='text-danger'>Error: " + e.getMessage() + "</td></tr>");
 				} finally {
-				try {
-				if (rs != null)
-					rs.close();
-				} catch (Exception ignored) {
-				}
-				try {
-				if (ps != null)
-					ps.close();
-				} catch (Exception ignored) {
-				}
-				try {
-				if (conn != null)
-					conn.close();
-				} catch (Exception ignored) {
-				}
+					try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+					try { if (ps != null) ps.close(); } catch (Exception ignored) {}
+					try { if (conn != null) conn.close(); } catch (Exception ignored) {}
 				}
 				%>
 			</tbody>
 		</table>
 
-		
 	</div>
 
 	<footer>

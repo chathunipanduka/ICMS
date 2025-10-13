@@ -103,7 +103,7 @@ footer {
 <body>
 
 	<div class="container">
-		<h2>📋 All Submitted Complaints</h2>
+		<h2>📋 My Submitted Complaints</h2>
 
 		<table
 			class="table table-bordered table-hover align-middle text-center">
@@ -128,7 +128,7 @@ footer {
 					// ✅ Only show complaints of the logged-in user
 					String sql = "SELECT c.id_complaint_tb, c.description, c.status, c.media, c.date_time, d.deptName "
 					+ "FROM complaint_tb c " + "LEFT JOIN dept_tb d ON c.dept_id = d.id_dept_tb "
-					+ "ORDER BY c.date_time DESC";
+					+ "WHERE c.user_id = (SELECT id_login_tb FROM login_tb WHERE uName = ?) " + "ORDER BY c.date_time DESC";
 
 					ps = conn.prepareStatement(sql);
 					ps.setString(1, username);

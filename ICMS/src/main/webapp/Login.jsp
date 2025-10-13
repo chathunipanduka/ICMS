@@ -66,11 +66,7 @@
             <input type="password" name="txtPwd" class="form-control" placeholder="Enter password" required>
         </div>
         <button type="submit" class="btn btn-primary w-100" id="btn-login">Login</button>
-      <!--    <div class="text-center my-2" id="or-text">OR</div>
-        <button type="button" class="btn btn-google w-100 mb-3">
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Logo">
-            <span id="google-text">Login with Google</span>
-        </button>-->
+      
         <div class="text-center">
             <small id="register-text">New User? <a href="Register.jsp" class="fw-bold">Register here</a></small>
         </div>
