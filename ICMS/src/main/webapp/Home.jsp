@@ -142,15 +142,15 @@
 <div class="container">
   <div class="complaint-section">
     <h3 id="form-title" class="mb-4">Send Complaint Anonymously</h3>
-    <form>
+    <form action="AnonymousSubmitComplaintServlet" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label id="lbl-complaint" class="form-label">Enter Complaint</label>
-        <textarea class="form-control" rows="3"></textarea>
+        <textarea class="form-control" rows="3" name="description"></textarea>
       </div>
       <div class="mb-3">
-        <label id="lbl-category" class="form-label">Category of Complaint</label>
-        <select class="form-select">
-          <option>Roads</option>
+        <label id="lbl-category" class="form-label" >Category of Complaint</label>
+        <select class="form-select" name="category-select">
+          <option>Roads and Pot Holes</option>
           <option>Water</option>
           <option>Electricity</option>
           <option>Garbage</option>
@@ -159,11 +159,11 @@
       </div>
       <div class="mb-3">
         <label id="lbl-media" class="form-label">Upload Media</label>
-        <input type="file" class="form-control">
+        <input type="file" class="form-control" name="media">
       </div>
       <div class="mb-3">
         <label id="lbl-location" class="form-label">Tag Location</label>
-        <input type="text" class="form-control" placeholder="Enter location">
+        <input type="text" class="form-control" placeholder="Enter location" name="location">
       </div>
       <div class="mb-3 text-muted">
         <small id="private-reply">If you want a private reply, please <a href="Login.jsp" id="login-link">Login here</a></small>
