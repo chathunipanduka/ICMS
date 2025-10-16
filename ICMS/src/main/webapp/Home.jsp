@@ -128,6 +128,9 @@
     <p id="hero-sub" style="color:#002b5c; font-weight:bold; background:rgba(255,255,255,0.7); padding:10px 20px; border-radius:10px;">
       Report infrastructure complaints quickly and anonymously
     </p>
+    <a href="Login.jsp">
+        <button class="btn btn-outline-light btn-sm me-3" id="lbt-view">View Status →</button>
+      </a>
   </div>
 
   <button class="carousel-control-prev" type="button" data-bs-target="#icmsCarousel" data-bs-slide="prev">
