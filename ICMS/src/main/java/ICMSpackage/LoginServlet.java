@@ -22,7 +22,7 @@ public class LoginServlet extends HttpServlet {
 
         String username = request.getParameter("txtName");
         String password = request.getParameter("txtPwd");
-        String role = request.getParameter("lbl-role"); // optional field from form
+        //String role = request.getParameter("lbl-role"); // optional field from form
 
         try (Connection conn = IcmsConnection.getConnection()) {
             if (conn == null) {
@@ -40,11 +40,9 @@ public class LoginServlet extends HttpServlet {
                     if (rs.next()) {
                         HttpSession session = request.getSession();
                         session.setAttribute("username", rs.getString("uName"));
-
-                        if ("User".equalsIgnoreCase(role)) {
                             response.sendRedirect("User/UserDashboard.jsp");
                             return; // stop execution here
-                        }
+                        
                     }
                 }
             }
@@ -60,10 +58,8 @@ public class LoginServlet extends HttpServlet {
                     if (rs2.next()) {
                         HttpSession session2 = request.getSession();
                         session2.setAttribute("username", rs2.getString("deptAdmUname"));
-                        if ("Admin".equalsIgnoreCase(role)) {
                             response.sendRedirect("DeptAdmin/DeptAdmDashboard.jsp");
                             return; // stop execution here
-                        }
                     } else {
                     	request.getRequestDispatcher("/Login.jsp").forward(request, response);
                         return;

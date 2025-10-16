@@ -79,11 +79,11 @@ th {
 	color: #e69500;
 }
 
-.status.resolved {
+.status.solved {
 	color: #28a745;
 }
 
-.status.rejected {
+.status.inprogress {
 	color: #dc3545;
 }
 
@@ -192,6 +192,8 @@ footer {
 
 		
 	</div>
+	
+	<br>
 
 	<footer>
 		Biyagama Pradeshiya Sabha<br> Contact: +94 123456789<br>

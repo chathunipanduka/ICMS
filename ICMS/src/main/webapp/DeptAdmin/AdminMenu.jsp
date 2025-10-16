@@ -57,7 +57,7 @@ body {
       <nav class="sidebar col-md-3 col-lg-2  d-md-block">
       
         <a class="active" href="AdmHome.jsp" target="rightFrame">Home</a>
-        <a href="../Complaints.jsp" target="rightFrame">Complaints</a>
+        <a href="AdmComplaints.jsp" target="rightFrame">Complaints</a>
         <a href="AdmReports.jsp" target="rightFrame">Generate Reports</a>
         <a href="../Notification.jsp" target="rightFrame">Notification</a><br><br><br><br><br><br><br><br>
       </nav>

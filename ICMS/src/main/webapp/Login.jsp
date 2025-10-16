@@ -50,13 +50,13 @@
 <div class="login-box">
     <h3 class="text-center mb-4" id="login-title">Login</h3>
     <form action="${pageContext.request.contextPath}/Dashboard" method="post">
-        <div class="mb-3">
+        <!--  <div class="mb-3">
             <label class="form-label" id="lbl-role">Role</label>
             <select class="form-select" name="lbl-role" required>
                 <option value="User" id="role-user">User</option>
                 <option value="Admin" id="role-admin">Admin</option>
             </select>
-        </div>
+        </div>-->
         <div class="mb-3">
             <label class="form-label" id="lbl-username">Username/Email</label>
             <input type="text" name="txtName" class="form-control" placeholder="Enter Username/ Email" required>
