@@ -27,42 +27,49 @@ public class AnonymousSubmitComplaintServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         String description = request.getParameter("description");
-        String deptName = request.getParameter("category-select");
+        String catgName = request.getParameter("category");
         String location = request.getParameter("location");
         Part mediaPart = request.getPart("media");
 
         try (Connection conn = IcmsConnection.getConnection()) {
 
-            // 1. Get user_id for 'Anonymous'
+            // 1️⃣ Get user_id for 'Anonymous'
             int userId = 0;
             String userSql = "SELECT id_login_tb FROM login_tb WHERE uName = ?";
             try (PreparedStatement psUser = conn.prepareStatement(userSql)) {
                 psUser.setString(1, "Anonymous");
-                ResultSet rs = psUser.executeQuery();
-                if (rs.next()) {
-                    userId = rs.getInt("id_login_tb");
-                } else {
-                    response.getWriter().println("Anonymous user not found in database.");
-                    return;
+                try (ResultSet rs = psUser.executeQuery()) {
+                    if (rs.next()) {
+                        userId = rs.getInt("id_login_tb");
+                    } else {
+                        response.getWriter().println("Anonymous user not found in database.");
+                        return;
+                    }
                 }
             }
 
-            // 2. Get dept_id
+            // 2️⃣ Get category_id and dept_id from category_tb
+            //int catgId = 0;
             int deptId = 0;
-            String deptSql = "SELECT id_dept_tb FROM dept_tb WHERE deptName = ?";
-            try (PreparedStatement psDept = conn.prepareStatement(deptSql)) {
-                psDept.setString(1, deptName);
-                ResultSet rsDept = psDept.executeQuery();
-                if (rsDept.next()) {
-                    deptId = rsDept.getInt("id_dept_tb");
-                } else {
-                    response.getWriter().println("Department not found.");
-                    return;
+            String catgSql = "SELECT id_category_tb, dept_id FROM category_tb WHERE category_name = ?";
+            try (PreparedStatement psCatg = conn.prepareStatement(catgSql)) {
+                psCatg.setString(1, catgName);
+                System.out.println("Category received: " + catgName);
+                try (ResultSet rsCatg = psCatg.executeQuery()) {
+                    if (rsCatg.next()) {
+                        //catgId = rsCatg.getInt("id_category_tb");
+                        deptId = rsCatg.getInt("dept_id");
+                    } else {
+                        response.getWriter().println("Category not found.");
+                        return;
+                    }
                 }
             }
 
-            // 3. Insert complaint
-            String insertSql = "INSERT INTO complaint_tb (user_id, dept_id, description, status, media, location, date_time) VALUES (?, ?, ?, ?, ?, ?, NOW())";
+            // 3️⃣ Insert complaint
+         // 3️⃣ Insert complaint
+            String insertSql = "INSERT INTO complaint_tb (user_id, dept_id, description, status, media, location, date_time) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
 
             try (PreparedStatement psInsert = conn.prepareStatement(insertSql)) {
                 psInsert.setInt(1, userId);
@@ -70,16 +77,20 @@ public class AnonymousSubmitComplaintServlet extends HttpServlet {
                 psInsert.setString(3, description);
                 psInsert.setString(4, "Pending");
 
+                InputStream mediaInputStream = null;
                 if (mediaPart != null && mediaPart.getSize() > 0) {
-                    InputStream mediaInputStream = mediaPart.getInputStream();
+                    mediaInputStream = mediaPart.getInputStream();
                     psInsert.setBlob(5, mediaInputStream);
                 } else {
                     psInsert.setNull(5, java.sql.Types.BLOB);
                 }
 
                 psInsert.setString(6, location);
-
                 int inserted = psInsert.executeUpdate();
+
+                if (mediaInputStream != null) {
+                    mediaInputStream.close();
+                }
 
                 try (PrintWriter out = response.getWriter()) {
                     if (inserted > 0) {
@@ -95,6 +106,7 @@ public class AnonymousSubmitComplaintServlet extends HttpServlet {
                     }
                 }
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
