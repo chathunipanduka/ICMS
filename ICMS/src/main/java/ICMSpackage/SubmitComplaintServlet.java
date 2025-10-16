@@ -37,7 +37,7 @@ public class SubmitComplaintServlet extends HttpServlet {
         }
 
         String description = request.getParameter("description");
-        String deptName = request.getParameter("category-select");
+        String catgName = request.getParameter("category");
         String location = request.getParameter("location");
         Part mediaPart = request.getPart("media");
 
@@ -63,15 +63,18 @@ public class SubmitComplaintServlet extends HttpServlet {
 
             // 2. Get dept_id
             int deptId = 0;
-            String deptSql = "SELECT id_dept_tb FROM dept_tb WHERE deptName = ?";
-            try (PreparedStatement psDept = conn.prepareStatement(deptSql)) {
-                psDept.setString(1, deptName);
-                ResultSet rsDept = psDept.executeQuery();
-                if (rsDept.next()) {
-                    deptId = rsDept.getInt("id_dept_tb");
-                } else {
-                    response.getWriter().println("Department not found.");
-                    return;
+            String catgSql = "SELECT id_category_tb, dept_id FROM category_tb WHERE category_name = ?";
+            try (PreparedStatement psCatg = conn.prepareStatement(catgSql)) {
+                psCatg.setString(1, catgName);
+                System.out.println("Category received: " + catgName);
+                try (ResultSet rsCatg = psCatg.executeQuery()) {
+                    if (rsCatg.next()) {
+                        //catgId = rsCatg.getInt("id_category_tb");
+                        deptId = rsCatg.getInt("dept_id");
+                    } else {
+                        response.getWriter().println("Category not found.");
+                        return;
+                    }
                 }
             }
 

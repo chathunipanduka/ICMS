@@ -1,3 +1,4 @@
+<%@ page import="java.sql.*, ICMSpackage.IcmsConnection" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -21,15 +22,34 @@
 				<textarea name="description" class="form-control" rows="3"></textarea>
 			</div>
 			<div class="mb-3">
-				<label id="lbl-category">Category</label> <select
-					name="category-select" class="form-select" id="category-select">
-					<option>Roads</option>
-					<option>Water</option>
-					<option>Electricity</option>
-					<option>Garbage</option>
-					<option>Other</option>
-				</select>
-			</div>
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select" required>
+          <option value="">Select Category</option>
+          <%
+              Connection con = null;
+              PreparedStatement ps = null;
+              ResultSet rs = null;
+              try {
+                  con = IcmsConnection.getConnection();
+                  ps = con.prepareStatement("SELECT id_category_tb, category_name FROM category_tb");
+                  rs = ps.executeQuery();
+                  while (rs.next()) {
+          %>
+                      <option value="<%=rs.getString("category_name")%>">
+                          <%=rs.getString("category_name")%>
+                      </option>
+          <%
+                  }
+              } catch (Exception e) {
+                  out.println("<option>Error loading category</option>");
+              } finally {
+                  if (rs != null) rs.close();
+                  if (ps != null) ps.close();
+                  if (con != null) con.close();
+              }
+          %>
+        </select>
+      </div>
 			<div class="mb-3">
 				<label id="lbl-media">Upload Media</label> <input type="file"
 					class="form-control" name="media">
