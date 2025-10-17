@@ -94,6 +94,7 @@
       <span id="title">Infrastructure Complaint Management System</span>
     </a>
     <div class="ms-auto">
+    
       <div class="dropdown">
         <a href="Home.jsp">
           <button class="btn btn-outline-light btn-sm me-3" type="button">
@@ -147,6 +148,44 @@
     </div>
   </form>
 </div>
+
+<!-- Footer -->
+<footer class="text-light pt-4" style="background-color: #002b5c; width: 99.5%; padding:15px;">
+  <div class="container1">
+    <div class="row text-center text-md-start">
+      <!-- About Section -->
+      <div class="col-md-4 mb-3">
+        <h5>Biyagama Pradeshiya Sabha</h5>
+        <p>Providing efficient infrastructure complaint management and citizen services for a better community.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-4 mb-3">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="Home.jsp" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="Login.jsp" class="text-light text-decoration-none">Submit Complaint</a></li>
+          <li><a href="about.jsp" class="text-light text-decoration-none">About Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-md-4 mb-3">
+        <h5>Contact Us</h5>
+        <p>Email: info@biyagama.ps.lk</p>
+        <p>Phone: +94 11 234 5678</p>
+        <p>Address: Biyagama Pradeshiya Sabha, <br>Biyagama, Sri Lanka</p>
+      </div>
+    </div>
+
+    <hr class="bg-light">
+
+    <div class="text-center pb-3">
+      &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
+    </div>
+  </div>
+</footer>
+
 
 <script>
   const translationsRegister = {
