@@ -19,13 +19,14 @@
   /* Blurred Background Image */
   body::before {
     content: "";
-    background: url("media/slide2.png") no-repeat center center fixed;
+    /*background: url("media/slide2.png") no-repeat center center fixed;*/
     background-size: cover;
     filter: blur(2px);
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: -1;
+    background-color: #E6F0FA;
   }
 
   /* Navbar */
@@ -135,6 +136,22 @@
       font-size: 16px;
     }
   }
+  /* Underline active navbar link */
+.navbar .nav-link.active {
+    position: relative;
+    color: #ffffff !important; /* Keep text white */
+}
+
+.navbar .nav-link.active::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px; /* Thickness of the underline */
+    background-color: #ffffff; /* Underline color */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
 </style>
 </head>
 <body>
@@ -151,8 +168,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarContent">
       <div class="d-flex ms-auto flex-wrap align-items-center justify-content-end">
-        <a href="Login.jsp"><button class="btn btn-outline-light btn-sm me-2 mb-2">Login</button></a>
-        <a href="Register.jsp"><button class="btn btn-outline-light btn-sm me-2 mb-2">Sign Up</button></a>
+      <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="Home.jsp">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="About.jsp">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Login.jsp">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Register.jsp">SignUp</a></li>
+                </ul>
         <div class="dropdown mb-2">
           <button class="btn btn-outline-light dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">
             <span id="language-label">Language</span>
@@ -172,17 +193,18 @@
 <div id="icmsCarousel" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="media/slide1.png" class="d-block w-100" alt="Slide 1" style="height:400px; object-fit:cover;">
+      <img src="media/slide1.png" class="d-block w-100 blur-50" alt="Slide 1" style="height:400px; object-fit:cover; filter: blur(2px);">
     </div>
     <div class="carousel-item">
-      <img src="media/slide2.png" class="d-block w-100" alt="Slide 2" style="height:400px; object-fit:cover;">
+      <img src="media/slide2.png" class="d-block w-100" alt="Slide 2" style="height:400px; object-fit:cover; filter: blur(2px);">
     </div>
     <div class="carousel-item">
-      <img src="media/slide3.png" class="d-block w-100" alt="Slide 3" style="height:400px; object-fit:cover;">
+      <img src="media/slide3.png" class="d-block w-100" alt="Slide 3" style="height:400px; object-fit:cover; filter: blur(2px);">
     </div>
   </div>
 
   <div class="carousel-caption d-flex flex-column justify-content-center align-items-center h-100 text-center px-2">
+    <img src="media/logo.png" alt="Sri Lanka Logo" width="100" class="me-2"><br>
     <h2 id="hero-title" style="color:#002b5c; font-weight:bold; background:rgba(255,255,255,0.7); padding:10px 20px; border-radius:10px;">
       Welcome to Infrastructure Complaint Management System
     </h2>
@@ -254,12 +276,64 @@
     </form>
   </div>
 </div>
+<br>
+<br>
+<br>
 
+<div class="container col-8">
+  <div class="complaint-section text-center">
+  <h3>Mission</h3>
+  <p style="font-size:20px">"To provide a transparent, efficient, and citizen-focused platform for reporting and resolving infrastructure issues, ensuring timely maintenance, improved public services, and sustainable community development."</p>
+  </div>
+  </div>
+
+<br>
+<br>
+<br>
+
+<div class="container col-8">
+  <div class="complaint-section text-center">
+  <h3>Vision</h3>
+  <p style="font-size:20px">"To establish a transparent, efficient, and citizen-centric infrastructure management system, ensuring timely resolution of complaints and sustainable development in Biyagama Pradeshiya Sabha."</p>
+  </div>
+  </div>
 <!-- Footer -->
-<footer>
-  <p>© 2025 Biyagama Pradeshiya Sabha | Infrastructure Complaint Management System</p>
-  <p>Designed and Developed for Public Service</p>
+<footer class="text-light pt-4" style="background-color: #002b5c;">
+  <div class="container">
+    <div class="row text-center text-md-start">
+      <!-- About Section -->
+      <div class="col-md-4 mb-3">
+        <h5>Biyagama Pradeshiya Sabha</h5>
+        <p>Providing efficient infrastructure complaint management and citizen services for a better community.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-4 mb-3">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="Home.jsp" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="Login.jsp" class="text-light text-decoration-none">Submit Complaint</a></li>
+          <li><a href="About.jsp" class="text-light text-decoration-none">About Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-md-4 mb-3">
+        <h5>Contact Us</h5>
+        <p>Email: info@biyagama.ps.lk</p>
+        <p>Phone: +94 11 234 5678</p>
+        <p>Address: Biyagama Pradeshiya Sabha, <br>Biyagama, Sri Lanka</p>
+      </div>
+    </div>
+
+    <hr class="bg-light">
+
+    <div class="text-center pb-3">
+      &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
+    </div>
+  </div>
 </footer>
+
 
 <script>
   const translations = {
