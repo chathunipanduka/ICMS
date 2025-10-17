@@ -30,7 +30,7 @@
 
   /* Navbar */
   .navbar {
-    background-color: #002b5c; /* Dark Blue */
+    background-color: #002b5c;
   }
   .navbar-brand, .nav-link, .dropdown-toggle {
     color: #ffffff !important;
@@ -38,7 +38,7 @@
 
   /* Complaint Section */
   .complaint-section {
-    background-color: rgba(255,255,255,0.9); /* semi-transparent white */
+    background-color: rgba(255,255,255,0.9);
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -74,6 +74,67 @@
     border-radius: 15px 15px 0 0;
     margin-top: 40px;
   }
+
+  /* Responsive Adjustments */
+  @media (max-width: 992px) {
+    .navbar .d-flex {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .navbar-brand span {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .complaint-section {
+      padding: 25px;
+      margin-top: 0;
+    }
+    #hero-title, #hero-sub {
+      font-size: 16px;
+      text-align: center;
+    }
+    .navbar-brand img {
+      width: 35px;
+    }
+    .navbar-brand span {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    #hero-title {
+      font-size: 15px;
+      padding: 6px 12px;
+    }
+    #hero-sub {
+      font-size: 13px;
+      padding: 5px 10px;
+    }
+    .btn {
+      font-size: 13px;
+      padding: 6px 10px;
+    }
+    footer p {
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .navbar-brand span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+    #lbt-view {
+      font-size: 12px;
+    }
+    .complaint-section h3 {
+      font-size: 16px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -85,22 +146,23 @@
       <img src="media/ICMS.png" alt="Sri Lanka Logo" width="45" class="me-2">
       <span id="title">Infrastructure Complaint Management System</span>
     </a>
-    <div class="d-flex">
-      <a href="#">
-        <button class="btn btn-outline-light btn-sm me-3" id="loginBtn">Home</button>
-      </a>
-      <a href="Login.jsp">
-        <button class="btn btn-outline-light btn-sm me-3" id="loginBtn">Login</button>
-      </a>
-      <div class="dropdown">
-        <button class="btn btn-outline-light dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">
-          <span id="language-label">Language</span>
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#" onclick="setLanguage('en')">English</a></li>
-          <li><a class="dropdown-item" href="#" onclick="setLanguage('si')">සිංහල</a></li>
-          <li><a class="dropdown-item" href="#" onclick="setLanguage('ta')">தமிழ்</a></li>
-        </ul>
+    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <div class="d-flex ms-auto flex-wrap align-items-center justify-content-end">
+        <a href="Login.jsp"><button class="btn btn-outline-light btn-sm me-2 mb-2">Login</button></a>
+        <a href="Register.jsp"><button class="btn btn-outline-light btn-sm me-2 mb-2">Sign Up</button></a>
+        <div class="dropdown mb-2">
+          <button class="btn btn-outline-light dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">
+            <span id="language-label">Language</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="setLanguage('en')">English</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setLanguage('si')">සිංහල</a></li>
+            <li><a class="dropdown-item" href="#" onclick="setLanguage('ta')">தமிழ்</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -120,17 +182,14 @@
     </div>
   </div>
 
-  <!-- Welcome Text Overlay -->
-  <div class="carousel-caption d-flex flex-column justify-content-center align-items-center h-100">
+  <div class="carousel-caption d-flex flex-column justify-content-center align-items-center h-100 text-center px-2">
     <h2 id="hero-title" style="color:#002b5c; font-weight:bold; background:rgba(255,255,255,0.7); padding:10px 20px; border-radius:10px;">
       Welcome to Infrastructure Complaint Management System
     </h2>
     <p id="hero-sub" style="color:#002b5c; font-weight:bold; background:rgba(255,255,255,0.7); padding:10px 20px; border-radius:10px;">
       Report infrastructure complaints quickly and anonymously
     </p>
-    <a href="Login.jsp">
-        <button class="btn btn-outline-light btn-sm me-3" id="lbt-view">View Status →</button>
-      </a>
+    <a href="Login.jsp"><button class="btn btn-outline-light btn-sm me-3" id="lbt-view">View Status →</button></a>
   </div>
 
   <button class="carousel-control-prev" type="button" data-bs-target="#icmsCarousel" data-bs-slide="prev">
@@ -145,7 +204,7 @@
 <!-- Complaint Form -->
 <div class="container">
   <div class="complaint-section">
-    <h3 id="form-title" class="mb-4">Send Complaint Anonymously</h3>
+    <h3 id="form-title" class="mb-4 text-center">Send Complaint Anonymously</h3>
     <form action="AnonymousSubmitComplaintServlet" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label id="lbl-complaint" class="form-label">Enter Complaint</label>
