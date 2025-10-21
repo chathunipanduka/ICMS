@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
-
 @WebServlet("/SubmitComplaintServlet")
 @MultipartConfig(maxFileSize = 10485760) // 10MB
 public class SubmitComplaintServlet extends HttpServlet {
@@ -47,29 +46,29 @@ public class SubmitComplaintServlet extends HttpServlet {
         try {
             conn = IcmsConnection.getConnection();
 
-            // 1. Get user_id
+            // 1️⃣ Get user_id and email
             int userId = 0;
-            String userSql = "SELECT id_login_tb FROM login_tb WHERE uName = ?";
+            String userEmail = null;
+            String userSql = "SELECT id_login_tb, email FROM login_tb WHERE uName = ?";
             try (PreparedStatement psUser = conn.prepareStatement(userSql)) {
                 psUser.setString(1, username);
                 ResultSet rs = psUser.executeQuery();
                 if (rs.next()) {
                     userId = rs.getInt("id_login_tb");
+                    userEmail = rs.getString("email");
                 } else {
                     response.getWriter().println("User not found.");
                     return;
                 }
             }
 
-            // 2. Get dept_id
+            // 2️⃣ Get dept_id
             int deptId = 0;
             String catgSql = "SELECT id_category_tb, dept_id FROM category_tb WHERE category_name = ?";
             try (PreparedStatement psCatg = conn.prepareStatement(catgSql)) {
                 psCatg.setString(1, catgName);
-                System.out.println("Category received: " + catgName);
                 try (ResultSet rsCatg = psCatg.executeQuery()) {
                     if (rsCatg.next()) {
-                        //catgId = rsCatg.getInt("id_category_tb");
                         deptId = rsCatg.getInt("dept_id");
                     } else {
                         response.getWriter().println("Category not found.");
@@ -78,14 +77,14 @@ public class SubmitComplaintServlet extends HttpServlet {
                 }
             }
 
-            // 3. Insert into complaint_tb
+            // 3️⃣ Insert complaint
             String insertSql = "INSERT INTO complaint_tb (user_id, dept_id, description, status, media, location, date_time) VALUES (?, ?, ?, ?, ?, ?, NOW())";
             psInsert = conn.prepareStatement(insertSql);
 
             psInsert.setInt(1, userId);
             psInsert.setInt(2, deptId);
             psInsert.setString(3, description);
-            psInsert.setString(4, "Pending"); // default status
+            psInsert.setString(4, "Pending");
 
             if (mediaPart != null && mediaPart.getSize() > 0) {
                 InputStream mediaInputStream = mediaPart.getInputStream();
@@ -97,19 +96,29 @@ public class SubmitComplaintServlet extends HttpServlet {
 
             int inserted = psInsert.executeUpdate();
 
-            response.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = response.getWriter()) {
-                if (inserted > 0) {
-                    // Success alert and redirect
+            if (inserted > 0) {
+                // ✅ Send email to user from DB
+            	String subject = "Complaint Submitted Successfully";
+            	String body = "Dear user,<br>Your complaint about <b>" + catgName + "</b> has been submitted successfully.<hr>\r\n"
+            			+ "                    <footer style=\"font-size: 12px; color: #777;\">\r\n"
+            			+ "                        This is an automated message from ICMS.<br>\r\n"
+            			+ "                        Please do not reply to this email.<br>\r\n"
+            			+ "                        © ICMS Team\r\n"
+            			+ "                    </footer>";
+            	EmailHelper.sendEmail(userEmail, subject, body);
+
+
+                try (PrintWriter out = response.getWriter()) {
                     out.println("<script type='text/javascript'>");
                     out.println("alert('Complaint submitted successfully!');");
-                    out.println("window.location.href='User/SendComplaint.jsp';"); // redirect after alert
+                    out.println("window.location.href='User/SendComplaint.jsp';");
                     out.println("</script>");
-                } else {
-                    // Failure alert and redirect
+                }
+            } else {
+                try (PrintWriter out = response.getWriter()) {
                     out.println("<script type='text/javascript'>");
                     out.println("alert('Failed to submit complaint! Please try again.');");
-                    out.println("window.location.href='User/SendComplaint.jsp';"); // redirect back
+                    out.println("window.location.href='User/SendComplaint.jsp';");
                     out.println("</script>");
                 }
             }

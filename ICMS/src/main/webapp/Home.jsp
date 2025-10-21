@@ -3,154 +3,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Infrastructure Complaint Management System - Biyagama Pradeshiya Sabha</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="media/ICMS.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infrastructure Complaint Management System - Biyagama Pradeshiya Sabha</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="media/BPS_LOGO.png">
 <style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    position: relative;
-    min-height: 100vh;
-    margin: 0;
-  }
-
-  /* Blurred Background Image */
-  body::before {
-    content: "";
-    /*background: url("media/slide2.png") no-repeat center center fixed;*/
-    background-size: cover;
-    filter: blur(2px);
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: -1;
-    background-color: #E6F0FA;
-  }
-
-  /* Navbar */
-  .navbar {
-    background-color: #002b5c;
-  }
-  .navbar-brand, .nav-link, .dropdown-toggle {
-    color: #ffffff !important;
-  }
-
-  /* Complaint Section */
-  .complaint-section {
-    background-color: rgba(255,255,255,0.9);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    margin-top: -40px;
-  }
-
-  /* Buttons */
-  .btn-primary {
-    background-color: #002b5c;
-    border: none;
-  }
-  .btn-primary:hover {
-    background-color: #001a38;
-  }
-
-  .btn-outline-light {
-    border-color: #ffffff;
-  }
-  .btn-outline-light:hover {
-    background-color: #ffffff;
-    color: #002b5c !important;
-  }
-
-  /* Footer */
-  footer {
-    background-color: #002b5c;
-    color: #ffffff;
-    text-align: center;
-    padding: 20px 10px;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    border-radius: 15px 15px 0 0;
-    margin-top: 40px;
-  }
-
-  /* Responsive Adjustments */
-  @media (max-width: 992px) {
-    .navbar .d-flex {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    .navbar-brand span {
-      font-size: 16px;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .complaint-section {
-      padding: 25px;
-      margin-top: 0;
-    }
-    #hero-title, #hero-sub {
-      font-size: 16px;
-      text-align: center;
-    }
-    .navbar-brand img {
-      width: 35px;
-    }
-    .navbar-brand span {
-      font-size: 14px;
-    }
-  }
-
-  @media (max-width: 576px) {
-    #hero-title {
-      font-size: 15px;
-      padding: 6px 12px;
-    }
-    #hero-sub {
-      font-size: 13px;
-      padding: 5px 10px;
-    }
-    .btn {
-      font-size: 13px;
-      padding: 6px 10px;
-    }
-    footer p {
-      font-size: 12px;
-    }
-  }
-
-  @media (max-width: 400px) {
-    .navbar-brand span {
-      display: block;
-      font-size: 12px;
-      line-height: 1.2;
-    }
-    #lbt-view {
-      font-size: 12px;
-    }
-    .complaint-section h3 {
-      font-size: 16px;
-    }
-  }
-  /* Underline active navbar link */
-.navbar .nav-link.active {
-    position: relative;
-    color: #ffffff !important; /* Keep text white */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
 }
 
-.navbar .nav-link.active::after {
-    content: "";
+/* Background */
+body::before {
+  content: "";
+  background-color: #E6F0FA;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #002b5c;
+}
+.navbar-brand, .nav-link, .dropdown-toggle {
+  color: #ffffff !important;
+}
+.navbar-toggler {
+  border: none;
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Complaint Section */
+.complaint-section {
+  background-color: rgba(255,255,255,0.9);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: -40px;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #002b5c;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: #001a38;
+}
+.btn-outline-light:hover {
+  background-color: #ffffff;
+  color: #002b5c !important;
+}
+
+/* Cards */
+.card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+/* Footer */
+footer {
+  background-color: #002b5c;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px 10px;
+  border-radius: 15px 15px 0 0;
+  margin-top: 40px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .navbar .d-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .complaint-section {
+    padding: 25px;
+    margin-top: 0;
+  }
+  #hero-title, #hero-sub {
+    font-size: 16px;
+    text-align: center;
+  }
+  .navbar-brand img {
+    width: 35px;
+  }
+  .navbar-brand span {
+    font-size: 14px;
+  }
+  .carousel-caption {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  #hero-title {
+    font-size: 15px;
+    padding: 6px 12px;
+  }
+  #hero-sub {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
+  .btn {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  footer p {
+    font-size: 12px;
+  }
+  .card p {
+    font-size: 14px;
+  }
+  .card {
+    padding: 15px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .navbar-brand span {
     display: block;
-    width: 100%;
-    height: 2px; /* Thickness of the underline */
-    background-color: #ffffff; /* Underline color */
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    font-size: 12px;
+    line-height: 1.2;
+  }
+  #lbt-view {
+    font-size: 12px;
+  }
+  .complaint-section h3 {
+    font-size: 16px;
+  }
+}
+
+/* Underline active navbar link */
+.navbar .nav-link.active {
+  position: relative;
+  color: #ffffff !important;
+}
+.navbar .nav-link.active::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 </style>
 </head>
@@ -160,71 +170,45 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="Home.jsp">
-      <img src="media/ICMS.png" alt="Sri Lanka Logo" width="45" class="me-2">
+      <img src="media/BPS_LOGO.png" alt="Sri Lanka Logo" width="45" class="me-2">
       <span id="title">Infrastructure Complaint Management System</span>
     </a>
-    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarContent">
-      <div class="d-flex ms-auto flex-wrap align-items-center justify-content-end">
       <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="Home.jsp">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="About.jsp">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="Login.jsp">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="Register.jsp">SignUp</a></li>
-                </ul>
-        <div class="dropdown mb-2">
-          <button class="btn btn-outline-light dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">
-            <span id="language-label">Language</span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" onclick="setLanguage('en')">English</a></li>
-            <li><a class="dropdown-item" href="#" onclick="setLanguage('si')">සිංහල</a></li>
-            <li><a class="dropdown-item" href="#" onclick="setLanguage('ta')">தமிழ்</a></li>
-          </ul>
-        </div>
-      </div>
+        <li class="nav-item"><a class="nav-link active" href="Home.jsp">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="About.jsp">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="Login.jsp">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="Register.jsp">SignUp</a></li>
+      </ul>
     </div>
   </div>
 </nav>
 
-<!-- Slideshow Section -->
+<!-- Carousel -->
 <div id="icmsCarousel" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="media/slide1.png" class="d-block w-100 blur-50" alt="Slide 1" style="height:400px; object-fit:cover; filter: blur(2px);">
+      <img src="media/slide1.png" class="d-block w-100" alt="Slide 1" style="height:400px; object-fit:cover;">
     </div>
     <div class="carousel-item">
-      <img src="media/slide2.png" class="d-block w-100" alt="Slide 2" style="height:400px; object-fit:cover; filter: blur(2px);">
+      <img src="media/slide2.png" class="d-block w-100" alt="Slide 2" style="height:400px; object-fit:cover;">
     </div>
     <div class="carousel-item">
-      <img src="media/slide3.png" class="d-block w-100" alt="Slide 3" style="height:400px; object-fit:cover; filter: blur(2px);">
+      <img src="media/slide3.png" class="d-block w-100" alt="Slide 3" style="height:400px; object-fit:cover;">
     </div>
   </div>
-
   <div class="carousel-caption d-flex flex-column justify-content-center align-items-center h-100 text-center px-2">
-    <img src="media/logo.png" alt="Sri Lanka Logo" width="100" class="me-2"><br>
-    <h2 id="hero-title" style="color:#002b5c; font-weight:bold; background:rgba(255,255,255,0.7); padding:10px 20px; border-radius:10px;">
-      Welcome to Infrastructure Complaint Management System
-    </h2>
-    <p id="hero-sub" style="color:#002b5c; font-weight:bold; background:rgba(255,255,255,0.7); padding:10px 20px; border-radius:10px;">
-      Report infrastructure complaints quickly and anonymously
-    </p>
-    <a href="Login.jsp"><button class="btn btn-outline-light btn-sm me-3" id="lbt-view">View Status →</button></a>
+    <h2 id="hero-title" class="fw-bold bg-light text-dark p-2 rounded">Welcome to Infrastructure Complaint Management System</h2>
+    <p id="hero-sub" class="fw-bold bg-light text-dark p-2 rounded">Report infrastructure complaints quickly and anonymously</p>
+    <a href="Login.jsp"><button class="btn btn-outline-light btn-sm">View Status →</button></a>
   </div>
-
-  <button class="carousel-control-prev" type="button" data-bs-target="#icmsCarousel" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#icmsCarousel" data-bs-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </button>
 </div>
-<br><br><br>
 
 <!-- Complaint Form -->
-<div class="container">
+<div class="container my-5">
   <div class="complaint-section">
     <h3 id="form-title" class="mb-4 text-center">Send Complaint Anonymously</h3>
     <form action="AnonymousSubmitComplaintServlet" method="post" enctype="multipart/form-data">
@@ -242,13 +226,11 @@
               ResultSet rs = null;
               try {
                   con = IcmsConnection.getConnection();
-                  ps = con.prepareStatement("SELECT id_category_tb, category_name FROM category_tb");
+                  ps = con.prepareStatement("SELECT category_name FROM category_tb");
                   rs = ps.executeQuery();
                   while (rs.next()) {
           %>
-                      <option value="<%=rs.getString("category_name")%>">
-                          <%=rs.getString("category_name")%>
-                      </option>
+          <option value="<%=rs.getString("category_name")%>"><%=rs.getString("category_name")%></option>
           <%
                   }
               } catch (Exception e) {
@@ -269,45 +251,72 @@
         <label id="lbl-location" class="form-label">Tag Location</label>
         <input type="text" class="form-control" placeholder="Enter location" name="location">
       </div>
-      <div class="mb-3 text-muted">
-        <small id="private-reply">If you want a private reply, please <a href="Login.jsp" id="login-link">Login here</a></small>
-      </div>
-      <button type="submit" class="btn btn-primary w-100" id="btn-submit">Submit Complaint</button>
+      <small id="private-reply" class="text-muted">If you want a private reply, please <a href="Login.jsp" id="login-link">Login here</a></small>
+      <button type="submit" class="btn btn-primary w-100 mt-3" id="btn-submit">Submit Complaint</button>
     </form>
   </div>
 </div>
-<br>
-<br>
-<br>
 
-<div class="container col-8">
-  <div class="complaint-section text-center">
-  <h3>Mission</h3>
-  <p style="font-size:20px">"To provide a transparent, efficient, and citizen-focused platform for reporting and resolving infrastructure issues, ensuring timely maintenance, improved public services, and sustainable community development."</p>
+<!-- Department Cards -->
+<div class="container mt-5">
+  <h4 class="text-center mb-4" style="color:#002b5c">Department Overview</h4>
+  <div class="row g-4 justify-content-center">
+    <div class="col-sm-6 col-md-4">
+      <div class="card text-center p-4">
+<div class="text-center my-3">
+    <img src="media/factory.png" alt="Sri Lanka Logo" width="45" class="img-fluid">
+</div>
+        <h5 class="card-title text-secondary">Industrial Division</h5>
+        <p>Oversees regulation and development of industrial activities, ensuring compliance with environmental and safety standards.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="card text-center p-4">
+      <div class="text-center my-3">
+    <img src="media/division.png" alt="Sri Lanka Logo" width="45" class="img-fluid">
+</div>
+        <h5 class="card-title text-secondary">Sub Office</h5>
+        <p>Provides essential public services and manages citizen requests closer to residents without visiting the main office.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="card text-center p-4">
+      <div class="text-center my-3">
+    <img src="media/electric-factory.png" alt="Sri Lanka Logo" width="45" class="img-fluid">
+</div>
+        <h5 class="card-title text-secondary">Electrical Division</h5>
+        <p>Responsible for maintaining and repairing street lighting and public electrical systems ensuring reliable infrastructure.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="card text-center p-4">
+      <div class="text-center my-3">
+    <img src="media/public-health.png" alt="Sri Lanka Logo" width="45" class="img-fluid">
+</div>
+        <h5 class="card-title text-secondary">PHI</h5>
+        <p>Ensures public health through sanitation monitoring, food safety, and disease prevention programs.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="card text-center p-4">
+      <div class="text-center my-3">
+    <img src="media/profit.png" alt="Sri Lanka Logo" width="45" class="img-fluid">
+</div>
+        <h5 class="card-title text-secondary">Revenue Inspector</h5>
+        <p>Manages tax and fee collection to fund public services and infrastructure projects effectively.</p>
+      </div>
+    </div>
   </div>
-  </div>
+</div>
 
-<br>
-<br>
-<br>
-
-<div class="container col-8">
-  <div class="complaint-section text-center">
-  <h3>Vision</h3>
-  <p style="font-size:20px">"To establish a transparent, efficient, and citizen-centric infrastructure management system, ensuring timely resolution of complaints and sustainable development in Biyagama Pradeshiya Sabha."</p>
-  </div>
-  </div>
 <!-- Footer -->
-<footer class="text-light pt-4" style="background-color: #002b5c;">
+<footer class="text-light pt-4">
   <div class="container">
     <div class="row text-center text-md-start">
-      <!-- About Section -->
       <div class="col-md-4 mb-3">
         <h5>Biyagama Pradeshiya Sabha</h5>
         <p>Providing efficient infrastructure complaint management and citizen services for a better community.</p>
       </div>
-
-      <!-- Quick Links -->
       <div class="col-md-4 mb-3">
         <h5>Quick Links</h5>
         <ul class="list-unstyled">
@@ -316,75 +325,17 @@
           <li><a href="About.jsp" class="text-light text-decoration-none">About Us</a></li>
         </ul>
       </div>
-
-      <!-- Contact Info -->
       <div class="col-md-4 mb-3">
         <h5>Contact Us</h5>
         <p>Email: info@biyagama.ps.lk</p>
         <p>Phone: +94 11 234 5678</p>
-        <p>Address: Biyagama Pradeshiya Sabha, <br>Biyagama, Sri Lanka</p>
+        <p>Address: Biyagama Pradeshiya Sabha, Biyagama, Sri Lanka</p>
       </div>
     </div>
-
     <hr class="bg-light">
-
-    <div class="text-center pb-3">
-      &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
-    </div>
+    <div class="text-center pb-3">&copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.</div>
   </div>
 </footer>
-
-
-<script>
-  const translations = {
-    en: {
-      title: "Infrastructure Complaint Management System",
-      "language-label": "Language",
-      "hero-title": "Welcome to Biyagama Pradeshiya Sabha",
-      "hero-sub": "Report infrastructure complaints quickly and anonymously",
-      "form-title": "Send Complaint Anonymously",
-      "lbl-complaint": "Enter Complaint",
-      "lbl-category": "Category of Complaint",
-      "lbl-media": "Upload Media",
-      "lbl-location": "Tag Location",
-      "private-reply": "If you want a private reply, please <a href='#' id='login-link'>Login here</a>",
-      "btn-submit": "Submit Complaint"
-    },
-    si: {
-      title: "පහසුකම් ගැටළු කළමනාකරණ පද්ධතිය",
-      "language-label": "භාෂාව",
-      "hero-title": "බියගම ප්‍රාදේශීය සභාවට සාදරයෙන් පිළිගනිමු",
-      "hero-sub": "ඔබගේ පහසුකම් ගැටළු වේගයෙන් සහ නාමරහිතව වාර්තා කරන්න",
-      "form-title": "නාමරහිතව පැමිණිලි යවන්න",
-      "lbl-complaint": "පැමිණිල්ල ඇතුලත් කරන්න",
-      "lbl-category": "පැමිණිලි කාණ්ඩය",
-      "lbl-media": "මාධ්‍යය උඩුගත කරන්න",
-      "lbl-location": "ස්ථානය සදහන් කරන්න",
-      "private-reply": "පෞද්ගලික පිළිතුරක් අවශ්‍ය නම් <a href='#' id='login-link'>මෙතන ලොග් වන්න</a>",
-      "btn-submit": "පැමිණිල්ල යවන්න"
-    },
-    ta: {
-      title: "அடித்தள புகார் மேலாண்மை அமைப்பு",
-      "language-label": "மொழி",
-      "hero-title": "பியகம பிரதேச சபைக்கு வரவேற்கிறோம்",
-      "hero-sub": "உங்கள் அடித்தள புகார்களை விரைவாகவும் பெயரில்லாமல் அறிக்கையிடுங்கள்",
-      "form-title": "பெயரில்லாமல் புகார் அனுப்பவும்",
-      "lbl-complaint": "புகார் உள்ளிடவும்",
-      "lbl-category": "புகார் வகை",
-      "lbl-media": "மீடியா பதிவேற்றுக",
-      "lbl-location": "இடத்தை குறிப்பிடுக",
-      "private-reply": "நீங்கள் தனிப்பட்ட பதிலை விரும்பினால் <a href='#' id='login-link'>இங்கே உள்நுழைக</a>",
-      "btn-submit": "புகார் சமர்ப்பிக்கவும்"
-    }
-  };
-
-  function setLanguage(lang) {
-    for (const key in translations[lang]) {
-      const el = document.getElementById(key);
-      if (el) el.innerHTML = translations[lang][key];
-    }
-  }
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
