@@ -1,3 +1,5 @@
+<%@ page import="java.sql.*, java.util.*, java.io.*"%>
+<%@ page import="ICMSpackage.IcmsConnection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -8,60 +10,101 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="p-4">
-  <h3 id="notification-title">Notifications</h3>
-  <p id="notification-desc">All notifications for the user will appear here.</p>
 
-  <ul class="list-group" id="notification-list">
-    <li class="list-group-item">Your complaint #1 has been resolved.</li>
-  </ul>
+<%
+String username = (String) session.getAttribute("username");
+if (username == null) {
+    response.sendRedirect(request.getContextPath() + "/Login.jsp");
+    return;
+}
+%>
+
+<div class="container mt-4">
+    <h2>Notifications</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Message</th>
+                    <th>Date/Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+<%
+Connection conn = null;
+PreparedStatement ps = null;
+ResultSet rs = null;
+
+try {
+    conn = IcmsConnection.getConnection();
+
+    // Select notifications for the logged-in user, newest first
+    String sql = "SELECT id_notification_tb, complaint_id, message, is_read, create_at "
+               + "FROM notification_tb "
+               + "WHERE user_id = (SELECT id_login_tb FROM login_tb WHERE uName = ?) and type='status_update' "
+               + "ORDER BY create_at DESC";
+
+    ps = conn.prepareStatement(sql);
+    ps.setString(1, username);
+    rs = ps.executeQuery();
+
+    boolean hasData = false;
+    int rowNumber = 1;
+    
+    while (rs.next()) {
+        hasData = true;
+        int id = rs.getInt("id_notification_tb");
+        String message = rs.getString("message");
+        Timestamp dateTime = rs.getTimestamp("create_at");
+        boolean isRead = rs.getBoolean("is_read");
+
+        // Bold for unread notifications
+        String rowClass = isRead ? "" : "fw-bold";
+%>
+<tr class="<%=rowClass%>">
+    <td><%=rowNumber++%></td>
+    <td><%=message%></td>
+    <td><%=dateTime%></td>
+    <td>
+        <form action="ViewNotificationServlet" method="post" style="margin:0;">
+            <input type="hidden" name="notificationId" value="<%=id%>"/>
+            <button type="submit" class="btn btn-primary btn-sm">
+                View
+            </button>
+        </form>
+    </td>
+</tr>
+<%
+    }
+
+    if (!hasData) {
+        out.println("<tr><td colspan='4' class='text-muted'>No notifications available.</td></tr>");
+    }
+
+} catch (Exception e) {
+    out.println("<tr><td colspan='4' class='text-danger'>Error: " + e.getMessage() + "</td></tr>");
+} finally {
+    try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+    try { if (ps != null) ps.close(); } catch (Exception ignored) {}
+    try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+}
+%>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<script>
-const translationsNotification = {
-  en: {
-    "notification-title":"Notifications",
-    "notification-desc":"All notifications for the user will appear here.",
-    "notification-list":["Your complaint #1 has been resolved."]
-  },
-  si: {
-    "notification-title":"දැනුම්දීම්",
-    "notification-desc":"පරිශීලකයාට සියලු දැනුම්දීම් මෙහි දක්වනු ඇත.",
-    "notification-list":["ඔබේ පැමිණිල්ල #1 විසඳා ඇත."]
-  },
-  ta: {
-    "notification-title":"அறிவிப்புகள்",
-    "notification-desc":"பயனருக்கான அனைத்து அறிவிப்புகளும் இங்கே தோன்றும்.",
-    "notification-list":["உங்கள் புகார் #1 தீர்க்கப்பட்டது."]
-  }
-};
-
-let lang = window.language || 'en';
-for (const key in translationsNotification[lang]) {
-  const el = document.getElementById(key);
-  if(el){
-    if(key==="notification-list"){
-      const list = document.getElementById("notification-list");
-      list.innerHTML = "";
-      translationsNotification[lang][key].forEach(item => {
-        list.innerHTML += `<li class="list-group-item">${item}</li>`;
-      });
-    } else el.innerText = translationsNotification[lang][key];
-  }
-}
-</script>
-
-<!-- Footer -->
+<!-- Footer (unchanged) -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
   <div class="container1">
     <div class="row text-center text-md-start">
-      <!-- About Section -->
       <div class="col-md-4 mb-3">
         <h5>Biyagama Pradeshiya Sabha</h5>
         <p>Providing efficient infrastructure complaint management and citizen services for a better community.</p>
       </div>
-
-      <!-- Quick Links -->
       <div class="col-md-4 mb-3">
         <h5>Quick Links</h5>
         <ul class="list-unstyled">
@@ -70,8 +113,6 @@ for (const key in translationsNotification[lang]) {
           <li><a href="about.jsp" class="text-light text-decoration-none">About Us</a></li>
         </ul>
       </div>
-
-      <!-- Contact Info -->
       <div class="col-md-4 mb-3">
         <h5>Contact Us</h5>
         <p>Email: info@biyagama.ps.lk</p>
@@ -79,9 +120,7 @@ for (const key in translationsNotification[lang]) {
         <p>Address: Biyagama Pradeshiya Sabha, <br>Biyagama, Sri Lanka</p>
       </div>
     </div>
-
     <hr class="bg-light">
-
     <div class="text-center pb-3">
       &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
     </div>

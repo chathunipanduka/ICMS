@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -46,7 +47,7 @@ public class SubmitComplaintServlet extends HttpServlet {
         try {
             conn = IcmsConnection.getConnection();
 
-            // 1️⃣ Get user_id and email
+// 1️⃣ Get user_id and email----------------------------------------------------------------------------------------------------------
             int userId = 0;
             String userEmail = null;
             String userSql = "SELECT id_login_tb, email FROM login_tb WHERE uName = ?";
@@ -62,7 +63,7 @@ public class SubmitComplaintServlet extends HttpServlet {
                 }
             }
 
-            // 2️⃣ Get dept_id
+ // 2️⃣ Get dept_id-------------------------------------------------------------------------------------------------------------------
             int deptId = 0;
             String catgSql = "SELECT id_category_tb, dept_id FROM category_tb WHERE category_name = ?";
             try (PreparedStatement psCatg = conn.prepareStatement(catgSql)) {
@@ -76,8 +77,13 @@ public class SubmitComplaintServlet extends HttpServlet {
                     }
                 }
             }
+            
+            
 
-            // 3️⃣ Insert complaint
+            
+            
+
+// 3️⃣ Insert complaint----------------------------------------------------------------------------------------------------------------
             String insertSql = "INSERT INTO complaint_tb (user_id, dept_id, description, status, media, location, date_time) VALUES (?, ?, ?, ?, ?, ?, NOW())";
             psInsert = conn.prepareStatement(insertSql);
 
@@ -97,7 +103,18 @@ public class SubmitComplaintServlet extends HttpServlet {
             int inserted = psInsert.executeUpdate();
 
             if (inserted > 0) {
-                // ✅ Send email to user from DB
+            	
+//  Get complaint_id-----------------------------------------------------------------------------------------------------------------
+            	int complaintId = 0;
+            	String maxIdSql = "SELECT MAX(id_complaint_tb) AS id FROM complaint_tb";
+            	try (PreparedStatement psMax = conn.prepareStatement(maxIdSql);
+            	     ResultSet rsMax = psMax.executeQuery()) {
+            	    if (rsMax.next()) {
+            	        complaintId = rsMax.getInt("id");
+            	    }
+            	}
+            	
+// ✅ Send email to user from DB------------------------------------------------------------------------------------------------------
             	String subject = "Complaint Submitted Successfully";
             	String body = "Dear user,<br>Your complaint about <b>" + catgName + "</b> has been submitted successfully.<hr>\r\n"
             			+ "                    <footer style=\"font-size: 12px; color: #777;\">\r\n"
@@ -106,6 +123,13 @@ public class SubmitComplaintServlet extends HttpServlet {
             			+ "                        © ICMS Team\r\n"
             			+ "                    </footer>";
             	EmailHelper.sendEmail(userEmail, subject, body);
+            	
+            	String title = "New Complaint Recieved";
+            	String message = "A New Complaint Submitted "+complaintId;
+            	String type = "new_complaint";
+            	
+            	createNotification(conn, complaintId, deptId, userId, title, message, type);
+
 
 
                 try (PrintWriter out = response.getWriter()) {
@@ -135,4 +159,20 @@ public class SubmitComplaintServlet extends HttpServlet {
             throws ServletException, IOException {
         response.getWriter().println("GET method is not supported. Use POST.");
     }
+    
+//Create Notification-----------------------------------------------------------------------------------------------------------------
+    
+    private void createNotification(Connection conn, int id, int deptID, int userID, String title, String message, String type) throws SQLException {
+    	String sql = "INSERT INTO notification_tb (complaint_id, dept_id, user_id, message, type) VALUES (?,?,?,?,?)";
+    	try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    	ps.setInt(1, id);
+    	ps.setInt(2, deptID);
+    	ps.setInt(3, userID);
+    	ps.setString(4, message);
+    	ps.setString(5, type);
+    	ps.executeUpdate();
+
+    	System.out.println("SQL: " + sql.toString());
+    	}
+    	}
 }
