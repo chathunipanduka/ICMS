@@ -41,7 +41,11 @@
 body {
   background-color: #00274d; /* your dark blue */
 }
-
+.sidebar a.active {
+    background-color: #0d6efd; /* Bright blue active color */
+    font-weight: 600;
+    transform: scale(1.03);
+  }
 
 
 
@@ -59,11 +63,23 @@ body {
         <a class="active" href="AdmHome.jsp" target="rightFrame">Home</a>
         <a href="AdmComplaints.jsp" target="rightFrame">Complaints</a>
         <a href="AdmReports.jsp" target="rightFrame">Generate Reports</a>
-        <a href="../Notification.jsp" target="rightFrame">Notification</a><br><br><br><br><br><br><br><br>
+        <a href="AdmNotification.jsp" target="rightFrame">Notification</a><br><br><br><br><br><br><br><br>
       </nav>
       </div>
       </div>
       
+<script>
+  // Select all sidebar links
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
 
+  sidebarLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      // Remove 'active' class from all links
+      sidebarLinks.forEach(l => l.classList.remove('active'));
+      // Add 'active' class to the clicked one
+      link.classList.add('active');
+    });
+  });
+</script>
 </body>
 </html>

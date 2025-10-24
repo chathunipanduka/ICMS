@@ -53,6 +53,12 @@ body {
 .dropdown-menu .dropdown-item:hover {
     background-color: #004080;
 }
+.sidebar a.active {
+    background-color: #0d6efd; /* Bright blue active color */
+    font-weight: 600;
+    transform: scale(1.03);
+  }
+
 </style>
 </head>
 <body>
@@ -101,7 +107,19 @@ body {
         </nav>
     </div>
 </div>
+<script>
+  // Select all sidebar links
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
 
+  sidebarLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      // Remove 'active' class from all links
+      sidebarLinks.forEach(l => l.classList.remove('active'));
+      // Add 'active' class to the clicked one
+      link.classList.add('active');
+    });
+  });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

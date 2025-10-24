@@ -27,6 +27,7 @@
       transition: background 0.3s;
       cursor: pointer;
     }
+    
     .sidebar a:hover, .sidebar a.active {
       background-color: #495057;
     }
@@ -41,7 +42,11 @@
 body {
   background-color: #00274d; /* your dark blue */
 }
-
+.sidebar a.active {
+    background-color: #0d6efd; /* Bright blue active color */
+    font-weight: 600;
+    transform: scale(1.03);
+  }
 
 
 
@@ -49,6 +54,9 @@ body {
   </style>
 </head>
 <body>
+<%
+String currentPage = request.getRequestURI();
+%>
 
   <div class="container-fluid">
     <div class="row">
@@ -63,7 +71,19 @@ body {
       </nav>
       </div>
       </div>
-      
+      <script>
+  // Select all sidebar links
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+  sidebarLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      // Remove 'active' class from all links
+      sidebarLinks.forEach(l => l.classList.remove('active'));
+      // Add 'active' class to the clicked one
+      link.classList.add('active');
+    });
+  });
+</script>
 
 </body>
 </html>
