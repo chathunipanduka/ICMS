@@ -43,7 +43,7 @@ header {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 10px;
+  margin-right: 0px;
 }
 
 .img-container {
@@ -155,6 +155,127 @@ iframe {
     width: 100%;
   }
 }
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f7fa;
+}
+
+/* Floating Modal Background */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Content Box */
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  max-width: 400px;
+  margin: 5% auto;
+  padding: 15px 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  position: relative;
+  text-align: center;
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+}
+
+/* Profile Picture */
+.profile-pic {
+  position: relative;
+  display: inline-block;
+}
+.profile-pic img {
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+  border-radius: 50%;
+}
+.camera-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #f0f0f0;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+
+
+/* Buttons */
+.save-btn {
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+.open-btn{
+background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 4px 4px;
+  border-radius: 60px;
+  cursor: pointer;
+}
+
+.open-btn:hover {
+  background-color: #517891;
+}
+
+
+.save-btn:hover{
+  background-color: #172c69;
+}
+
+.profile-form {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.form-row label {
+  flex: 0 0 120px; /* fixed width for labels */
+  font-weight: 500;
+  color: #333;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f3f6fb;
+}
+
 </style>
 </head>
 <body>
@@ -168,13 +289,19 @@ iframe {
     }
 
     String deptName = "";
+    String deptAdmUName = "";
+    String email = "";
+    String contactNo = "";
     try (Connection con = IcmsConnection.getConnection()) {
-        String sql = "SELECT dept_name FROM dept_admin_tb WHERE deptAdmUname = ?";
+        String sql = "SELECT dept_name, deptAdmEmail, deptAdmContactNo, deptAdmUname FROM dept_admin_tb WHERE deptAdmUname = ?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, username);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
             deptName = rs.getString("dept_name");
+            deptAdmUName = rs.getString("deptAdmUname");
+            email = rs.getString("deptAdmEmail");
+            contactNo = rs.getString("deptAdmContactNo");
         }
         rs.close();
         ps.close();
@@ -183,9 +310,10 @@ iframe {
     }
 %>
 
+
 <header>
   <div class="img-container">
-    <img class="userimg" src="../media/profile.png" alt="Profile"><br>
+    <button id="openProfileBtn" class="open-btn"><img class="userimg" src="../media/profile.png" alt="Profile"></button>
     <p style="font-weight:normal; font-size:16px; margin-bottom:0;"><%= username %></p>
   </div>
 
@@ -197,6 +325,51 @@ iframe {
 
   <a href="<%= request.getContextPath() %>/LogoutServlet" class="logout" target="_top">Logout</a>
 </header>
+
+<!-- Floating Profile Modal -->
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeProfileBtn">&times;</span>
+    <h3 class="title">Profile</h3>
+
+    <div class="profile-pic">
+      <img src="../media/profile.png" alt="Profile Picture">
+      <div class="camera-icon">
+        <i class="fa fa-camera"></i>
+      </div>
+    </div>
+
+    <div class="info">
+    <form class="profile-form" method="post" action="${pageContext.request.contextPath}/UpdateAdmProfileServlet">
+    
+    <div class="form-row">
+    <label>Department:</label>
+    <input type="text" name="deptname" value="<%= deptName %>" readonly>
+  </div> 
+  
+  <div class="form-row">
+    <label>Username:</label>
+    <input type="text" name="uname" value="<%= deptAdmUName %>" readonly>
+  </div>
+
+  
+
+  <div class="form-row">
+    <label>Contact No:</label>
+    <input type="text" name="contact" value="<%= contactNo %>">
+  </div>
+
+  <div class="form-row">
+    <label>Email:</label>
+    <input type="email" name="email" value="<%= email %>">
+  </div>
+
+  <button type="submit" class="save-btn">Save Updates</button>
+</form>
+
+    </div>
+  </div>
+</div>
 
 <div class="iframe-container">
   <iframe src="AdminMenu.jsp" name="leftFrame" id="leftFrame" class="left-frame"></iframe>
@@ -211,6 +384,21 @@ const leftFrame = document.getElementById('leftFrame');
 menuToggle.addEventListener('click', () => {
   leftFrame.classList.toggle('active');
 });
+
+document.getElementById("openProfileBtn").onclick = function() {
+	  document.getElementById("profileModal").style.display = "block";
+	};
+
+	document.getElementById("closeProfileBtn").onclick = function() {
+	  document.getElementById("profileModal").style.display = "none";
+	};
+
+	window.onclick = function(event) {
+	  const modal = document.getElementById("profileModal");
+	  if (event.target === modal) {
+	    modal.style.display = "none";
+	  }
+	};
 </script>
 
 </body>

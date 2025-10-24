@@ -204,6 +204,10 @@ footer {
       <input type="email" class="form-control" name="email" placeholder="Enter email" required>
     </div>
     <div class="mb-3">
+      <label class="form-label">Contact No</label>
+      <input type="text" class="form-control" name="contact" placeholder="Enter contact No" required>
+    </div>
+    <div class="mb-3">
       <label class="form-label">Password</label>
       <input type="password" class="form-control" name="Pwd" placeholder="Enter password" required>
     </div>
