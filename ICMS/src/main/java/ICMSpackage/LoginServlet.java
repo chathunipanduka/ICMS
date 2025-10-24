@@ -30,7 +30,7 @@ public class LoginServlet extends HttpServlet {
             }
 
             // Normal user login
-            String sql = "SELECT uName, pwd FROM login_tb WHERE (uName=? OR email=?) AND pwd=?";
+            String sql = "SELECT uName, pwd, isBlocked FROM login_tb WHERE (uName=? OR email=?) AND pwd=?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, username);
                 ps.setString(2, username);
@@ -38,6 +38,14 @@ public class LoginServlet extends HttpServlet {
 
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
+                    	int isBlocked = rs.getInt("isBlocked");
+                        if (isBlocked == 1) {
+                            request.setAttribute("error", "Your account has been blocked. Contact admin.");
+                            request.getRequestDispatcher("Login.jsp").forward(request, response);
+                            
+                            return;
+                        }
+                        
                         HttpSession session = request.getSession();
                         session.setAttribute("username", rs.getString("uName"));
                             response.sendRedirect("User/UserDashboard.jsp");
@@ -48,7 +56,7 @@ public class LoginServlet extends HttpServlet {
             }
 
             // Department admin login
-            String sql2 = "SELECT deptAdmUname, deptAdmPwd FROM dept_admin_tb WHERE (deptAdmUname=? OR deptAdmEmail=?) AND deptAdmPwd=?";
+            String sql2 = "SELECT deptAdmUname, deptAdmPwd, isBlocked FROM dept_admin_tb WHERE (deptAdmUname=? OR deptAdmEmail=?) AND deptAdmPwd=?";
             try (PreparedStatement ps2 = conn.prepareStatement(sql2)) {
                 ps2.setString(1, username);
                 ps2.setString(2, username);
@@ -56,11 +64,19 @@ public class LoginServlet extends HttpServlet {
 
                 try (ResultSet rs2 = ps2.executeQuery()) {
                     if (rs2.next()) {
+                    	int isBlocked = rs2.getInt("isBlocked");
+                        if (isBlocked == 1) {
+                            request.setAttribute("error", "Your account has been blocked. Contact admin.");
+                            request.getRequestDispatcher("Login.jsp").forward(request, response);
+                            
+                            return;
+                        }
                         HttpSession session2 = request.getSession();
                         session2.setAttribute("username", rs2.getString("deptAdmUname"));
                             response.sendRedirect("DeptAdmin/DeptAdmDashboard.jsp");
                             return; // stop execution here
                     } else {
+                    	request.setAttribute("error", "Username or Password Incorrect. Try Again.");
                     	request.getRequestDispatcher("/Login.jsp").forward(request, response);
                         return;
                     }

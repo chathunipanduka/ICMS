@@ -1,14 +1,205 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*, java.util.*, java.io.*"%>
+<%@ page import="ICMSpackage.IcmsConnection"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- ✅ Important for responsiveness -->
+<title>All Complaints - Super Admin</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+  background-color: #f7f9fb;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.container {
+  margin-top: 40px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Table styling */
+table {
+  font-size: 15px;
+  vertical-align: middle;
+}
+th {
+  background-color: #003366;
+  color: #fff;
+}
+.media-preview {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.media-preview:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+}
+.no-media {
+  color: #999;
+  font-size: 13px;
+}
+
+/* Footer styling */
+footer {
+  background-color: #00274d;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  font-size: 14px;
+  margin-top: 40px;
+}
+
+/* ✅ Responsive adjustments */
+@media (max-width: 992px) {
+  .container {
+    margin-top: 20px;
+    padding: 15px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  .media-preview {
+    width: 60px;
+    height: 60px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    border: none;
+  }
+  table th, table td {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 10px;
+  }
+  footer {
+    font-size: 13px;
+    padding: 10px;
+  }
+}
+</style>
 </head>
 <body>
-<h1>Manage User</h1>
+<%
+String username = (String) session.getAttribute("username");
+if (username == null) {
+    response.sendRedirect(request.getContextPath() + "/Login.jsp");
+    return;
+}
+%>
+
+<div class="container">
+  <h2 class="text-center mb-4">All Users</h2>
+
+  <!-- ✅ Responsive table wrapper -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Conatact No</th>
+          <th>User Name</th>
+          <th>Password</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+<%
+Connection conn = null;
+PreparedStatement ps = null;
+ResultSet rs = null;
+try {
+    conn = IcmsConnection.getConnection();
+    String sql = "SELECT id_login_tb, firstName, lastName, email, contactNo, uName, pwd, isBlocked FROM login_tb " +
+                 "ORDER BY id_login_tb DESC";
+    ps = conn.prepareStatement(sql);
+    rs = ps.executeQuery();
+
+    boolean hasData = false;
+    while (rs.next()) {
+        hasData = true;
+        int id = rs.getInt("id_login_tb");
+        String fName = rs.getString("firstName");
+        String lName = rs.getString("lastName");
+        String email = rs.getString("email");
+        String contact = rs.getString("contactNo");
+        String user_name = rs.getString("uName");
+        String pwd = rs.getString("pwd");
+        String blockStatus = rs.getInt("isBlocked") == 1 ? "Blocked" : "Active";
+%>
+<tr>
+  <td><%= id %></td>
+  <td><%= fName %></td>
+  <td><%= lName %></td>
+  <td><%= email %></td>
+  <td><%= contact %></td>
+  <td><%= user_name %></td>
+  <td><%= pwd %></td>
+  
+  <td>
+    <a href="EditUser.jsp?id=<%= id %>" class="btn btn-sm btn-warning mb-1">Edit</a>
+    <a href="<%= request.getContextPath() %>/DeleteUserServlet?id=<%= id %>"
+       class="btn btn-sm btn-danger mb-1"
+       onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+    
+    <% if (blockStatus.equals("Active")) { %>
+      <a href="<%= request.getContextPath() %>/BlockUserServlet?id=<%= id %>&action=block"
+         class="btn btn-sm btn-secondary"
+         onclick="return confirm('Block this user?');">Block</a>
+    <% } else { %>
+      <a href="<%= request.getContextPath() %>/BlockUserServlet?id=<%= id %>&action=unblock"
+         class="btn btn-sm btn-success"
+         onclick="return confirm('Unblock this user?');">Unblock</a>
+    <% } %>
+  </td>
+</tr>
+<%
+    }
+    if (!hasData) {
+        out.println("<tr><td colspan='9' class='text-muted'>No complaints submitted yet.</td></tr>");
+    }
+} catch (Exception e) {
+    out.println("<tr><td colspan='9' class='text-danger'>Error: " + e.getMessage() + "</td></tr>");
+    e.printStackTrace();
+} finally {
+    try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+    try { if (ps != null) ps.close(); } catch (Exception ignored) {}
+    try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+}
+%>
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+<br>
+
 <!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
   <div class="container1">

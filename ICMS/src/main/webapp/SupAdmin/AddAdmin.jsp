@@ -18,14 +18,12 @@
     <!-- Add Form -->
     <form action="${pageContext.request.contextPath}/AddAdminServlet" method="post" class="mb-4">
 
-      <!-- Department Dropdown -->
-      <div class="mb-3">
-      
       <div class="mb-3">
         <label class="form-label fw-bold">Admin Name</label>
-        <input type="text" name="Name" class="form-control" placeholder="Enter Contact No" required>
+        <input type="text" name="Name" class="form-control" placeholder="Enter Admin Name" required>
       </div>
       
+      <div class="mb-3">
         <label class="form-label fw-bold">Department</label>
         <select name="dept_name" class="form-select" required>
           <option value="">Select Department</option>
@@ -39,7 +37,7 @@
                   rs = ps.executeQuery();
                   while (rs.next()) {
           %>
-                      <option value="<%=rs.getInt("deptName")%>">
+                      <option value="<%=rs.getString("deptName")%>">
                           <%=rs.getString("deptName")%>
                       </option>
           <%
@@ -55,7 +53,6 @@
         </select>
       </div>
 
-      <!-- Category Name -->
       <div class="mb-3">
         <label class="form-label fw-bold">Contact No</label>
         <input type="text" name="contactNo" class="form-control" placeholder="Enter Contact No" required>
@@ -63,7 +60,7 @@
       
       <div class="mb-3">
         <label class="form-label fw-bold">Email</label>
-        <input type="text" name="email" class="form-control" placeholder="Enter Email" required>
+        <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
       </div>
       
       <div class="mb-3">
@@ -73,10 +70,9 @@
       
       <div class="mb-3">
         <label class="form-label fw-bold">Password</label>
-        <input type="text" name="pwd" class="form-control" placeholder="Enter Password" required>
+        <input type="password" name="pwd" class="form-control" placeholder="Enter Password" required>
       </div>
 
-      <!-- Submit Button -->
       <div class="text-center">
         <button type="submit" class="btn btn-primary w-50">Add Admin</button>
       </div>
@@ -84,18 +80,19 @@
 
     <hr>
 
-    <!-- Display All Categories -->
-    <h4 class="text-center text-success mb-3">Existing Categories</h4>
+    <!-- Display All Admins -->
+    <h4 class="text-center text-success mb-3">Existing Admins</h4>
     <table class="table table-striped table-bordered">
       <thead class="table-dark text-center">
         <tr>
           <th>ID</th>
-          <th>AdminName</th>
+          <th>Admin Name</th>
           <th>Department</th>
           <th>Contact No</th>
           <th>Email</th>
           <th>Username</th>
           <th>Password</th>
+          <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -106,30 +103,44 @@
           ResultSet rs2 = null;
           try {
               con2 = IcmsConnection.getConnection();
-              String query = "SELECT a.iddept_admin_tb, a.deptAdmName, a.dept_name, a.deptAdmContactNo, a.deptAdmEmail, a.deptAdmUname, a.deptAdmPwd FROM dept_admin_tb a";
+              String query = "SELECT iddept_admin_tb, deptAdmName, dept_name, deptAdmContactNo, deptAdmEmail, deptAdmUname, deptAdmPwd, isBlocked FROM dept_admin_tb";
               ps2 = con2.prepareStatement(query);
               rs2 = ps2.executeQuery();
               while (rs2.next()) {
+            	  int id = rs2.getInt("iddept_admin_tb");
+            	  int isBlocked = rs2.getInt("isBlocked");
+            	  String blockStatus = (isBlocked == 1) ? "Blocked" : "Active";
         %>
         <tr>
-          <td><%=rs2.getInt("iddept_admin_tb")%></td>
-          <td><%=rs2.getString("deptAdmName")%></td>
-          <td><%=rs2.getString("dept_name")%></td>
-          <td><%=rs2.getString("deptAdmContactNo")%></td>
-          <td><%=rs2.getString("deptAdmEmail")%></td>
-          <td><%=rs2.getString("deptAdmUname")%></td>
-          <td><%=rs2.getString("deptAdmPwd")%></td>
+          <td><%= id %></td>
+          <td><%= rs2.getString("deptAdmName") %></td>
+          <td><%= rs2.getString("dept_name") %></td>
+          <td><%= rs2.getString("deptAdmContactNo") %></td>
+          <td><%= rs2.getString("deptAdmEmail") %></td>
+          <td><%= rs2.getString("deptAdmUname") %></td>
+          <td><%= rs2.getString("deptAdmPwd") %></td>
+          <td><%= blockStatus %></td>
           <td>
-            <a href="EditAdmin.jsp?id=<%=rs2.getInt("iddept_admin_tb")%>" class="btn btn-sm btn-warning">Edit</a>
-            <a href="${pageContext.request.contextPath}/DeleteAdminServlet?id=<%=rs2.getInt("iddept_admin_tb")%>" 
+            <a href="EditAdmin.jsp?id=<%= id %>" class="btn btn-sm btn-warning">Edit</a>
+            <a href="${pageContext.request.contextPath}/DeleteAdminServlet?id=<%= id %>" 
                class="btn btn-sm btn-danger" 
                onclick="return confirm('Are you sure you want to delete this admin?');">Delete</a>
+
+            <% if (blockStatus.equals("Active")) { %>
+              <a href="<%= request.getContextPath() %>/BlockAdmServlet?id=<%= id %>&action=block"
+                 class="btn btn-sm btn-secondary"
+                 onclick="return confirm('Block this admin?');">Block</a>
+            <% } else { %>
+              <a href="<%= request.getContextPath() %>/BlockAdmServlet?id=<%= id %>&action=unblock"
+                 class="btn btn-sm btn-success"
+                 onclick="return confirm('Unblock this admin?');">Unblock</a>
+            <% } %>
           </td>
         </tr>
         <%
               }
           } catch (Exception e) {
-              out.println("<tr><td colspan='4' class='text-center text-danger'>Error loading data</td></tr>");
+              out.println("<tr><td colspan='9' class='text-center text-danger'>Error: " + e.getMessage() + "</td></tr>");
           } finally {
               if (rs2 != null) rs2.close();
               if (ps2 != null) ps2.close();
@@ -140,42 +151,10 @@
     </table>
   </div>
 </div>
-<br>
-<br>
-<!-- Footer -->
-<footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
-  <div class="container1">
-    <div class="row text-center text-md-start">
-      <!-- About Section -->
-      <div class="col-md-4 mb-3">
-        <h5>Biyagama Pradeshiya Sabha</h5>
-        <p>Providing efficient infrastructure complaint management and citizen services for a better community.</p>
-      </div>
 
-      <!-- Quick Links -->
-      <div class="col-md-4 mb-3">
-        <h5>Quick Links</h5>
-        <ul class="list-unstyled">
-          <li><a href="Home.jsp" class="text-light text-decoration-none">Home</a></li>
-          <li><a href="Login.jsp" class="text-light text-decoration-none">Submit Complaint</a></li>
-          <li><a href="about.jsp" class="text-light text-decoration-none">About Us</a></li>
-        </ul>
-      </div>
-
-      <!-- Contact Info -->
-      <div class="col-md-4 mb-3">
-        <h5>Contact Us</h5>
-        <p>Email: info@biyagama.ps.lk</p>
-        <p>Phone: +94 11 234 5678</p>
-        <p>Address: Biyagama Pradeshiya Sabha, <br>Biyagama, Sri Lanka</p>
-      </div>
-    </div>
-
-    <hr class="bg-light">
-
-    <div class="text-center pb-3">
-      &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
-    </div>
+<footer class="text-light pt-4 mt-5" style="background-color: #00274d;">
+  <div class="text-center pb-3">
+    &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
   </div>
 </footer>
 

@@ -162,6 +162,7 @@ footer {
 }
 </style>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <body>
 
 <!-- Navbar -->
@@ -190,12 +191,13 @@ footer {
   <h3 class="text-center mb-4">Login</h3>
   <form action="${pageContext.request.contextPath}/Dashboard" method="post">
     <div class="mb-3">
-      <label class="form-label">Username/Email</label>
+      <label class="form-label">Email</label>
       <input type="text" name="txtName" class="form-control" placeholder="Enter Username/Email" required>
     </div>
     <div class="mb-3">
       <label class="form-label">Password</label>
       <input type="password" name="txtPwd" class="form-control" placeholder="Enter password" required>
+      <a href="ForgotPassword.jsp" > Forgot Password?</a>
     </div>
     <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
     <div class="text-center">
@@ -203,6 +205,22 @@ footer {
     </div>
   </form>
 </div>
+<%
+String error = (String) request.getAttribute("error");
+if (error != null) {
+%>
+<script>
+  Swal.fire({
+    icon: 'error',
+    title: 'Login Failed',
+    text: '<%= error %>',
+    confirmButtonColor: '#d33',
+    confirmButtonText: 'OK'
+  });
+</script>
+<%
+}
+%>
 
 <!-- Footer -->
 <footer>
