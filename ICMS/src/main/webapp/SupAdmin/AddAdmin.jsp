@@ -152,11 +152,6 @@
   </div>
 </div>
 
-<footer class="text-light pt-4 mt-5" style="background-color: #00274d;">
-  <div class="text-center pb-3">
-    &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
-  </div>
-</footer>
 
 </body>
 </html>
