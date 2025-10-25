@@ -13,6 +13,7 @@ import java.util.Random;
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -27,7 +28,7 @@ public class RegisterServlet extends HttpServlet {
         String pwd = request.getParameter("Pwd");
         String cPwd = request.getParameter("cPwd");
 
-        // ✅ Password confirmation check
+        // ✅ Check if passwords match
         if (!pwd.equals(cPwd)) {
             out.println("<script>alert('Passwords do not match!'); window.location='Register.jsp';</script>");
             return;
@@ -39,34 +40,40 @@ public class RegisterServlet extends HttpServlet {
             }
 
             // ✅ Check if username already exists
-            String checkSql = "SELECT uName FROM login_tb WHERE uName=?";
+            String checkSql = "SELECT uName FROM login_tb WHERE uName=? OR email=?";
             try (PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
                 checkPs.setString(1, uName);
+                checkPs.setString(2, email);
+
                 try (ResultSet rs = checkPs.executeQuery()) {
                     if (rs.next()) {
-                        out.println("<script>alert('Username already exists!'); window.location='Register.jsp';</script>");
+                        out.println("<script>alert('Username or Email already exists!'); window.location='Register.jsp';</script>");
                         return;
                     }
                 }
             }
 
+            // ✅ Hash password with BCrypt
+            String hashedPassword = PasswordUtil.hashPassword(pwd);
+
             // ✅ Insert new user
-            String sql = "INSERT INTO login_tb (firstname, lastname, uname, email, contactNo, pwd) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO login_tb (firstname, lastname, uname, email, contactNo, pwd, isBlocked) VALUES (?, ?, ?, ?, ?, ?, 0)";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, fName);
                 ps.setString(2, lName);
                 ps.setString(3, uName);
                 ps.setString(4, email);
                 ps.setString(5, contact);
-                ps.setString(6, pwd); // ⚠️ Use hashed password in production
+                ps.setString(6, hashedPassword);
 
                 int rows = ps.executeUpdate();
                 if (rows > 0) {
 
-                    // ✅ Generate OTP and expiry
+                    // ✅ Generate OTP (6-digit) and expiry (5 mins)
                     int otp = 100000 + new Random().nextInt(900000);
                     LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
 
+                    // ✅ Store OTP in DB
                     String updateOtp = "UPDATE login_tb SET otp_code=?, otp_expiry=? WHERE uName=?";
                     try (PreparedStatement ps1 = conn.prepareStatement(updateOtp)) {
                         ps1.setString(1, String.valueOf(otp));
@@ -75,26 +82,28 @@ public class RegisterServlet extends HttpServlet {
                         ps1.executeUpdate();
                     }
 
-                    // ✅ Send OTP via Email
+                    // ✅ Send OTP Email
                     try {
-                        EmailHelper.sendEmail(email, 
+                        EmailHelper.sendEmail(
+                            email,
                             "OTP Verification - ICMS",
-                            "Hello " + fName + ",\n\nYour OTP is: " + otp + 
-                            "\nIt will expire in 5 minutes.\n\nThank you!");
+                            "Hello " + fName + ",\n\nYour OTP is: " + otp +
+                            "\nIt will expire in 5 minutes.\n\nThank you,\nICMS Team"
+                        );
                     } catch (Exception e) {
                         e.printStackTrace();
                         out.println("<script>alert('Error sending OTP: " + e.getMessage() + "');</script>");
                     }
 
-                    // ✅ Store username in session for OTP verification
+                    // ✅ Store username in session for VerifyOTP.jsp
                     HttpSession session = request.getSession();
                     session.setAttribute("username", uName);
 
-                    // ✅ Redirect to OTP page
+                    // ✅ Redirect to OTP verification page
                     response.sendRedirect("VerifyOTP.jsp");
                     return;
                 } else {
-                    out.println("<script>alert('Registration Failed!'); window.location='Register.jsp';</script>");
+                    out.println("<script>alert('Registration failed! Please try again.'); window.location='Register.jsp';</script>");
                 }
             }
 
@@ -104,6 +113,7 @@ public class RegisterServlet extends HttpServlet {
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doPost(request, response);

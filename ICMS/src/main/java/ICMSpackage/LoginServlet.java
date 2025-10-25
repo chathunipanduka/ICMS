@@ -1,5 +1,12 @@
 package ICMSpackage;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import org.mindrot.jbcrypt.BCrypt;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -7,90 +14,79 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 @WebServlet("/Dashboard")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
 
         String username = request.getParameter("txtName");
         String password = request.getParameter("txtPwd");
-        //String role = request.getParameter("lbl-role"); // optional field from form
 
         try (Connection conn = IcmsConnection.getConnection()) {
-            if (conn == null) {
-                throw new ServletException("Database connection failed!");
-            }
 
-            // Normal user login
-            String sql = "SELECT uName, pwd, isBlocked FROM login_tb WHERE (uName=? OR email=?) AND pwd=?";
+            // --- Check normal user ---
+            String sql = "SELECT uName, pwd, isBlocked FROM login_tb WHERE (uName=? OR email=?)";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, username);
                 ps.setString(2, username);
-                ps.setString(3, password);
 
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                    	int isBlocked = rs.getInt("isBlocked");
+                        int isBlocked = rs.getInt("isBlocked");
                         if (isBlocked == 1) {
                             request.setAttribute("error", "Your account has been blocked. Contact admin.");
                             request.getRequestDispatcher("Login.jsp").forward(request, response);
-                            
                             return;
                         }
-                        
-                        HttpSession session = request.getSession();
-                        session.setAttribute("username", rs.getString("uName"));
+
+                        String hashedPassword = rs.getString("pwd");
+                        if (BCrypt.checkpw(password, hashedPassword)) {
+                            HttpSession session = request.getSession();
+                            session.setAttribute("username", rs.getString("uName"));
                             response.sendRedirect("User/UserDashboard.jsp");
-                            return; // stop execution here
-                        
+                            return;
+                        }
                     }
                 }
             }
 
-            // Department admin login
-            String sql2 = "SELECT deptAdmUname, deptAdmPwd, isBlocked FROM dept_admin_tb WHERE (deptAdmUname=? OR deptAdmEmail=?) AND deptAdmPwd=?";
+            // --- Check department admin ---
+            String sql2 = "SELECT deptAdmUname, deptAdmPwd, isBlocked FROM dept_admin_tb WHERE (deptAdmUname=? OR deptAdmEmail=?)";
             try (PreparedStatement ps2 = conn.prepareStatement(sql2)) {
                 ps2.setString(1, username);
                 ps2.setString(2, username);
-                ps2.setString(3, password);
 
                 try (ResultSet rs2 = ps2.executeQuery()) {
                     if (rs2.next()) {
-                    	int isBlocked = rs2.getInt("isBlocked");
+                        int isBlocked = rs2.getInt("isBlocked");
                         if (isBlocked == 1) {
                             request.setAttribute("error", "Your account has been blocked. Contact admin.");
                             request.getRequestDispatcher("Login.jsp").forward(request, response);
-                            
                             return;
                         }
-                        HttpSession session2 = request.getSession();
-                        session2.setAttribute("username", rs2.getString("deptAdmUname"));
+
+                        String hashedPassword = rs2.getString("deptAdmPwd");
+                        if (BCrypt.checkpw(password, hashedPassword)) {
+                            HttpSession session2 = request.getSession();
+                            session2.setAttribute("username", rs2.getString("deptAdmUname"));
                             response.sendRedirect("DeptAdmin/DeptAdmDashboard.jsp");
-                            return; // stop execution here
-                    } else {
-                    	request.setAttribute("error", "Username or Password Incorrect. Try Again.");
-                    	request.getRequestDispatcher("/Login.jsp").forward(request, response);
-                        return;
+                            return;
+                        }
                     }
                 }
             }
+
+            // --- Invalid login ---
+            request.setAttribute("error", "Username or Password Incorrect. Try Again.");
+            request.getRequestDispatcher("/Login.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServletException("Login failed due to system error", e);
         }
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
     }
 }
