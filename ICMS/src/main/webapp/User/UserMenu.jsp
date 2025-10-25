@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -47,6 +48,12 @@ body {
     font-weight: 600;
     transform: scale(1.03);
   }
+  .goog-te-banner-frame.skiptranslate {
+    display: none !important;
+} 
+body {
+    top: 0px !important; 
+}
 
 
 
@@ -64,10 +71,10 @@ String currentPage = request.getRequestURI();
       <!-- Sidebar -->
       <nav class="sidebar col-md-3 col-lg-2  d-md-block">
       
-        <a class="active" href="UserHome.jsp" target="rightFrame">Home</a>
-        <a href="SendComplaint.jsp" target="rightFrame">Send Complaints</a>
-        <a href="../Complaints.jsp" target="rightFrame">View Status</a>
-        <a href="../Notification.jsp" target="rightFrame">Notification</a><br><br><br><br><br><br><br><br>
+        <a class="active" href="UserHome.jsp" target="rightFrame"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</a>
+        <a href="SendComplaint.jsp" target="rightFrame"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Send Complaints</a>
+        <a href="../Complaints.jsp" target="rightFrame"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;View Status</a>
+        <a href="../Notification.jsp" target="rightFrame"><i class="fa fa-bell"></i>&nbsp;&nbsp;Notification</a><br><br><br><br><br><br><br><br>
       </nav>
       </div>
       </div>

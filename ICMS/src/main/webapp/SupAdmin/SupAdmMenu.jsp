@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Admin Panel</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 body {
@@ -67,11 +68,11 @@ body {
     <div class="row">
         <!-- Sidebar -->
         <nav class="sidebar col-md-3 col-lg-2 d-md-block">
-            <a class="active" href="SupAdmHome.jsp" target="rightFrame">Home</a>
-            <a href="DepartmentManage.jsp" target="rightFrame">Department Management</a>
-            <a href="SupAdmReports.jsp" target="rightFrame">Generate Reports</a>
-            <a href="UserManage.jsp" target="rightFrame">User Management</a>
-            <a href="DeptComplaints.jsp" target="rightFrame">DeptComplaints</a>
+            <a class="active" href="SupAdmHome.jsp" target="rightFrame"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</a>
+            <a href="DepartmentManage.jsp" target="rightFrame"><i class="fa fa-building"></i>&nbsp;&nbsp;Department</a>
+            <a href="SupAdmReports.jsp" target="rightFrame"><i class="fa fa-chart-bar"></i>&nbsp;&nbsp;Reports</a>
+            <a href="UserManage.jsp" target="rightFrame"><i class="fa fa-user"></i>&nbsp;&nbsp;User</a>
+            <a href="DeptComplaints.jsp" target="rightFrame"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Complaints</a>
 
            <!-- Dropdown for Complaints -->
 <div class="dropdown">
@@ -103,7 +104,7 @@ body {
         %>
     </ul>
 </div>
-            <a href="../Notification.jsp" target="rightFrame">Notification</a>
+            <a href="../Notification.jsp" target="rightFrame"><i class="fa fa-file-alt"></i>&nbsp&nbspNotification</a>
         </nav>
     </div>
 </div>

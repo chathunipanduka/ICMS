@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -60,10 +61,10 @@ body {
       <!-- Sidebar -->
       <nav class="sidebar col-md-3 col-lg-2  d-md-block">
       
-        <a class="active" href="AdmHome.jsp" target="rightFrame">Home</a>
-        <a href="AdmComplaints.jsp" target="rightFrame">Complaints</a>
-        <a href="AdmReports.jsp" target="rightFrame">Generate Reports</a>
-        <a href="AdmNotification.jsp" target="rightFrame">Notification</a><br><br><br><br><br><br><br><br>
+        <a class="active" href="AdmHome.jsp" target="rightFrame"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</a>
+        <a href="AdmComplaints.jsp" target="rightFrame"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Complaints</a>
+        <a href="AdmReports.jsp" target="rightFrame"><i class="fa fa-chart-bar"></i>&nbsp;&nbsp;Reports</a>
+        <a href="AdmNotification.jsp" target="rightFrame"><i class="fa fa-bell"></i>&nbsp;&nbsp;Notification</a><br><br><br><br><br><br><br><br>
       </nav>
       </div>
       </div>
