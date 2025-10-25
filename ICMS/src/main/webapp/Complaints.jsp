@@ -101,17 +101,7 @@ th {
 	overflow-x: auto;
 }
 
-/* Footer 
-footer {
-	width: 100%;
-	background-color: #00274d;
-	text-align: center;
-	padding: 15px;
-	font-size: 14px;
-	color: #ffffff;
-	box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-	margin-top: 30px;
-}*/
+
 
 /* ===== Responsive Breakpoints ===== */
 
@@ -152,9 +142,13 @@ footer {
 		line-height: 1.4;
 	}
 }
+
+
+
 </style>
 </head>
 <body>
+
 
 	<div class="container">
 		<h2>📋 My Submitted Complaints</h2>
