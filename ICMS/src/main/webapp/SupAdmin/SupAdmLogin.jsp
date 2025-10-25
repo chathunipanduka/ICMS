@@ -8,6 +8,7 @@
   <title>Super Admin Login - ICMS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="../media/ICMS.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
     body {
@@ -52,6 +53,29 @@
       width: 20px;
     }
 
+
+/* Password Field with Eye Icon */
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-container i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+
+.password-container i:hover {
+  color: #333;
+}
     
 
     /* 🔹 Responsive adjustments */
@@ -113,10 +137,11 @@
       <label class="form-label">Username</label>
       <input type="text" name="superAdminName" class="form-control" placeholder="Enter username" required>
     </div>
-
-    <div class="mb-3">
+    
+    <div class="mb-3 password-container">
       <label class="form-label">Password</label>
-      <input type="password" name="superAdminPwd" class="form-control" placeholder="Enter password" required>
+      <input type="password" id="password" name="superAdminPwd" class="form-control" placeholder="Enter password" required>
+      <i class="fa fa-eye" id="togglePassword"></i>
     </div>
 
     <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
@@ -133,6 +158,20 @@
     </div>
   <% } %>
 </div>
+
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+
+  togglePassword.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+
+    // Toggle the icon (eye / eye-slash)
+    this.classList.toggle('fa-eye');
+    this.classList.toggle('fa-eye-slash');
+  });
+</script>
 
 <!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
