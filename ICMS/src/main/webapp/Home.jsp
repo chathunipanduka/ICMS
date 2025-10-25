@@ -8,6 +8,7 @@
 <title>Infrastructure Complaint Management System - Biyagama Pradeshiya Sabha</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="media/BPS_LOGO.png">
+
 <style>
 body {
   font-family: 'Segoe UI', sans-serif;
@@ -162,9 +163,64 @@ footer {
   bottom: 0;
   left: 0;
 }
+
+@media (max-width: 768px) {
+  #hero-title { font-size: 1rem; }
+  #hero-sub { font-size: 0.9rem; }
+  .carousel-caption button { font-size: 0.8rem; padding: 6px 10px; }
+}
+
+#google_translate_element {
+    display: inline-block;
+    margin: 10px;
+  }
+
+  .goog-te-gadget-simple {
+    background-color: #f8f9fa !important;
+    border: 1px solid #ccc !important;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: 'Segoe UI', sans-serif !important;
+    color: #333 !important;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .goog-te-gadget-simple img {
+    display: none; /* Hide Google icon if you want */
+  }
+
+  .goog-te-gadget-simple span {
+    color: #333 !important;
+    font-size: 14px !important;
+  }
+
+
 </style>
 </head>
 <body>
+<!-- Google Translate Element -->
+<div id="google_translate_element"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',          // Your site’s original language
+        includedLanguages: 'en,si,ta', // Optional: restrict languages (English, Sinhala, Tamil)
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      },
+      'google_translate_element'
+    );
+  }
+</script>
+
+<!-- Google Translate Script -->
+<script type="text/javascript" 
+  src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+
+
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
@@ -190,22 +246,41 @@ footer {
 <!-- Carousel -->
 <div id="icmsCarousel" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
+
     <div class="carousel-item active">
       <img src="media/slide1.png" class="d-block w-100" alt="Slide 1" style="height:400px; object-fit:cover;">
     </div>
+
     <div class="carousel-item">
       <img src="media/slide2.png" class="d-block w-100" alt="Slide 2" style="height:400px; object-fit:cover;">
     </div>
+
     <div class="carousel-item">
       <img src="media/slide3.png" class="d-block w-100" alt="Slide 3" style="height:400px; object-fit:cover;">
     </div>
+
   </div>
-  <div class="carousel-caption d-flex flex-column justify-content-center align-items-center h-100 text-center px-2">
-    <h2 id="hero-title" class="fw-bold bg-light text-dark p-2 rounded">Welcome to Infrastructure Complaint Management System</h2>
-    <p id="hero-sub" class="fw-bold bg-light text-dark p-2 rounded">Report infrastructure complaints quickly and anonymously</p>
-    <a href="Login.jsp"><button class="btn btn-outline-light btn-sm">View Status →</button></a>
+
+  <!-- Overlay -->
+  <div class="carousel-caption d-flex flex-column justify-content-center align-items-center h-100 text-center px-3" 
+       style="background: rgba(0, 0, 0, 0.45); top: 0; left: 0; width: 100%; height: 100%;">
+       <img src="media/logo.png" alt="Sri Lanka Logo" width="80" class="me-2">
+    <h2 id="hero-title" class="fw-bold text-white p-2 rounded">Welcome to Infrastructure Complaint Management System</h2>
+    <p id="hero-sub" class="fw-medium text-light p-2 rounded">Report infrastructure complaints quickly and anonymously</p>
+    <a href="Login.jsp" class="mt-3">
+      <button class="btn btn-outline-light btn-sm">View Status →</button>
+    </a>
   </div>
+
+  <!-- Optional controls -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#icmsCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#icmsCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
 </div>
+
 
 <!-- Complaint Form -->
 <div class="container my-5">
@@ -256,6 +331,17 @@ footer {
     </form>
   </div>
 </div>
+<br>
+<hr>
+<div class="d-flex justify-content-center gap-5 bg-white p-5">
+  <img src="media/BPS_LOGO.png" alt="Image 1" width="100" height="100">
+  <img src="media/logo.png" alt="Image 2" width="130" height="100">
+  <img src="media/ICMS.png" alt="Image 3" width="100" height="100">
+  <img src="media/CEA.png" alt="Image 4" width="100" height="100">
+  <img src="media/CEB.png" alt="Image 5" width="100" height="100">
+</div>
+<hr>
+<br>
 
 <!-- Department Cards -->
 <div class="container mt-5">
@@ -308,6 +394,17 @@ footer {
     </div>
   </div>
 </div>
+
+
+<!-- Optional: Auto slide interval -->
+<script>
+  const icmsCarousel = document.querySelector('#icmsCarousel');
+  const carousel = new bootstrap.Carousel(icmsCarousel, {
+    interval: 4000,  // Auto slide every 4 seconds
+    pause: 'hover'   // Stop sliding when hovered
+  });
+</script>
+
 
 <!-- Footer -->
 <footer class="text-light pt-4">

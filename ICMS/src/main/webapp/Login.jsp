@@ -8,6 +8,8 @@
 <title>Login - Infrastructure Complaint Management System</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="media/BPS_LOGO.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 body {
   font-family: 'Segoe UI', sans-serif;
@@ -81,89 +83,93 @@ footer {
   margin-top: 40px;
 }
 
+/* Password Field with Eye Icon */
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-container i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+
+.password-container i:hover {
+  color: #333;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .login-box {
     margin: 40px 15px;
     padding: 30px 20px;
   }
-  
 }
+
 @media (max-width: 576px) {
   .login-box { margin-top: 30px; padding: 25px 15px; }
-  
 }
 
-/* Responsive Adjustments */
-@media (max-width: 992px) {
-  .navbar .d-flex {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+#google_translate_element {
+    display: inline-block;
+    margin: 10px;
   }
-}
 
-@media (max-width: 768px) {
-  .complaint-section {
-    padding: 25px;
-    margin-top: 0;
-  }
-  #hero-title, #hero-sub {
-    font-size: 16px;
-    text-align: center;
-  }
-  .navbar-brand img {
-    width: 35px;
-  }
-  .navbar-brand span {
-    font-size: 14px;
-  }
-  .carousel-caption {
-    padding: 10px;
-  }
-}
-
-@media (max-width: 576px) {
-  #hero-title {
-    font-size: 15px;
-    padding: 6px 12px;
-  }
-  #hero-sub {
-    font-size: 13px;
+  .goog-te-gadget-simple {
+    background-color: #f8f9fa !important;
+    border: 1px solid #ccc !important;
+    border-radius: 6px;
     padding: 5px 10px;
+    font-family: 'Segoe UI', sans-serif !important;
+    color: #333 !important;
+    display: inline-flex;
+    align-items: center;
   }
-  .btn {
-    font-size: 13px;
-    padding: 6px 10px;
-  }
-  footer p {
-    font-size: 12px;
-  }
-  .card p {
-    font-size: 14px;
-  }
-  .card {
-    padding: 15px !important;
-  }
-}
 
-@media (max-width: 400px) {
-  .navbar-brand span {
-    display: block;
-    font-size: 12px;
-    line-height: 1.2;
+  .goog-te-gadget-simple img {
+    display: none; /* Hide Google icon if you want */
   }
-  #lbt-view {
-    font-size: 12px;
+
+  .goog-te-gadget-simple span {
+    color: #333 !important;
+    font-size: 14px !important;
   }
-  .complaint-section h3 {
-    font-size: 16px;
-  }
-}
+
+
 </style>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <body>
+
+<!-- Google Translate Element -->
+<div id="google_translate_element"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',          // Your site’s original language
+        includedLanguages: 'en,si,ta', // Optional: restrict languages (English, Sinhala, Tamil)
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      },
+      'google_translate_element'
+    );
+  }
+</script>
+
+<!-- Google Translate Script -->
+<script type="text/javascript" 
+  src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
@@ -194,17 +200,21 @@ footer {
       <label class="form-label">Email</label>
       <input type="text" name="txtName" class="form-control" placeholder="Enter Username/Email" required>
     </div>
-    <div class="mb-3">
+
+    <div class="mb-3 password-container">
       <label class="form-label">Password</label>
-      <input type="password" name="txtPwd" class="form-control" placeholder="Enter password" required>
-      <a href="ForgotPassword.jsp" > Forgot Password?</a>
+      <input type="password" id="password" name="txtPwd" class="form-control" placeholder="Enter password" required>
+      <i class="fa fa-eye" id="togglePassword"></i>
+      <a href="ForgotPassword.jsp" class="d-block mt-2">Forgot Password?</a>
     </div>
+
     <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
     <div class="text-center">
       <small>New User? <a href="Register.jsp" class="fw-bold">Register here</a></small>
     </div>
   </form>
 </div>
+
 <%
 String error = (String) request.getAttribute("error");
 if (error != null) {
@@ -221,6 +231,20 @@ if (error != null) {
 <%
 }
 %>
+
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+
+  togglePassword.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+
+    // Toggle the icon (eye / eye-slash)
+    this.classList.toggle('fa-eye');
+    this.classList.toggle('fa-eye-slash');
+  });
+</script>
 
 <!-- Footer -->
 <footer>

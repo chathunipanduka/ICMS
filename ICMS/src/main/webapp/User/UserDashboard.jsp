@@ -260,13 +260,21 @@ background-color: #1e3a8a;
   border-radius: 6px;
   background-color: #f3f6fb;
 }
-
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+} 
+body {
+    top: 0px !important; 
+}
 
 
 </style>
 </head>
 
 <body>
+<div id="google_translate_element"></div>
+  <jsp:include page="../TranslateSetup.jsp" />
+
 <%
     String username = (String) session.getAttribute("username");
     if (username == null) {
@@ -390,6 +398,8 @@ background-color: #1e3a8a;
 	  }
 	};
 </script>
+
+
 
 </body>
 </html>
