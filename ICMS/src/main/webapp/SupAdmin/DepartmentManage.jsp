@@ -29,6 +29,21 @@
         font-weight: bold;
         color: #003366;
     }
+    .iframe-container-bottom {
+  width: 100%;
+  height:1400px%; /* adjust height as needed */
+  margin-top: 30px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.iframe-container-bottom iframe {
+  width: 100%;
+  height: 1400px;
+  border: none;
+}
+    
 </style>
 </head>
 <body>
@@ -74,7 +89,7 @@
             <div class="card text-center p-4">
                 <h5 class="card-title text-secondary">Departments</h5>
                 <div class="count"><%= deptCount %></div>
-                <a href="AddNewDepartment.jsp" class="btn btn-primary mt-3 w-75">View Departments</a>
+                <a href="AddNewDepartment.jsp" target="bottomFrame" onclick="load" class="btn btn-primary mt-3 w-75">View Departments</a>
             </div>
         </div>
 
@@ -83,7 +98,7 @@
             <div class="card text-center p-4">
                 <h5 class="card-title text-secondary">Categories</h5>
                 <div class="count"><%= catCount %></div>
-                <a href="AddCategory.jsp" class="btn btn-success mt-3 w-75">View Categories</a>
+                <a href="AddCategory.jsp" target="bottomFrame" onclick="'load()'" class="btn btn-success mt-3 w-75">View Categories</a>
             </div>
         </div>
 
@@ -92,7 +107,7 @@
             <div class="card text-center p-4">
                 <h5 class="card-title text-secondary">Admins</h5>
                 <div class="count"><%= adminCount %></div>
-                <a href="AddAdmin.jsp" class="btn btn-warning mt-3 w-75">View Admins</a>
+                <a href="AddAdmin.jsp" target="bottomFrame" onclick="load" class="btn btn-warning mt-3 w-75">View Admins</a>
             </div>
         </div>
 
@@ -100,6 +115,19 @@
 </div>
 <br>
 <br>
+
+<div class="mt-5"></div> <!-- adds margin-top -->
+<div class="iframe-container-bottom">
+  <iframe src="AddNewDepartment.jsp" name="bottomFrame" ></iframe>
+</div>
+
+
+<script>
+window.addEventListener('load', function() {
+    const iframe = document.querySelector('iframe[name="bottomFrame"]');
+    iframe.focus(); // Focus the iframe container
+});
+</script>
 
 <!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
