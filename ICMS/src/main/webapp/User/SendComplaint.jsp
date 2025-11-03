@@ -10,13 +10,15 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="media/logo.png">
+<!-- Optionally add Bootstrap for spinner -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 	<div class="p-4">
 		<h3 id="send-title">Send Complaint</h3>
 		<form method="post"
 			action="${pageContext.request.contextPath}/SubmitComplaintServlet"
-			enctype="multipart/form-data">
+			enctype="multipart/form-data" onsubmit="showLoading()">
 			<div class="mb-3">
 				<label id="lbl-complaint">Complaint</label>
 				<textarea name="description" class="form-control" rows="3"></textarea>
@@ -62,6 +64,34 @@
 				Complaint</button>
 		</form>
 	</div>
+	
+	<!-- Loading overlay -->
+<div id="loadingOverlay" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(255,255,255,0.8);
+  z-index:9999;
+  text-align:center;
+  padding-top:200px;
+  font-size:20px;
+  color:#333;
+">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p>Sending email... Please wait.</p>
+</div>
+
+<script>
+function showLoading() {
+  document.getElementById('loadingOverlay').style.display = 'block';
+}
+</script>
+
+
+	
 	
 	<!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">

@@ -9,7 +9,8 @@
 <title>All Complaints</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<!-- Optionally add Bootstrap for spinner -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 body {
   background-color: #f7f9fb;
@@ -150,7 +151,7 @@ h2 {
   <td><%= dept_Name != null ? dept_Name : "N/A" %></td>
   <td class="text-start"><%= desc %></td>
   <td>
-    <form method="post" action="${pageContext.request.contextPath}/UpdateComplaintStatusServlet">
+    <form method="post" action="${pageContext.request.contextPath}/UpdateComplaintStatusServlet" onsubmit="showLoading()">
       <input type="hidden" name="id" value="<%= id %>">
       <select name="status" class="form-select form-select-sm">
         <option value="Pending" <%= "Pending".equalsIgnoreCase(status) ? "selected" : "" %>>Pending</option>
@@ -189,6 +190,35 @@ h2 {
     </div>
   </div>
 </div>
+
+
+<!-- Loading overlay -->
+<div id="loadingOverlay" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(255,255,255,0.8);
+  z-index:9999;
+  text-align:center;
+  padding-top:200px;
+  font-size:20px;
+  color:#333;
+">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p>Sending email... Please wait.</p>
+</div>
+
+<script>
+function showLoading() {
+  document.getElementById('loadingOverlay').style.display = 'block';
+}
+</script>
+
+
+
 
 <!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">

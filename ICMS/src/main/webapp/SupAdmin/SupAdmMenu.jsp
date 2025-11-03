@@ -70,41 +70,10 @@ body {
         <nav class="sidebar col-md-3 col-lg-2 d-md-block">
             <a class="active" href="SupAdmHome.jsp" target="rightFrame"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</a>
             <a href="DepartmentManage.jsp" target="rightFrame"><i class="fa fa-building"></i>&nbsp;&nbsp;Department</a>
-            <a href="SupAdmReports.jsp" target="rightFrame"><i class="fa fa-chart-bar"></i>&nbsp;&nbsp;Reports</a>
             <a href="UserManage.jsp" target="rightFrame"><i class="fa fa-user"></i>&nbsp;&nbsp;User</a>
             <a href="DeptComplaints.jsp" target="rightFrame"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Complaints</a>
-
-           <!-- Dropdown for Complaints -->
-<div class="dropdown">
-    <button class="btn dropdown-toggle btn-sm text-white w-75" 
-            type="button" data-bs-toggle="dropdown" 
-            style="background-color: transparent; border: none;">
-        Complaints
-    </button>
-    <ul class="dropdown-menu bg-dark">
-        <%
-            try (Connection con = IcmsConnection.getConnection();
-                 PreparedStatement ps = con.prepareStatement("SELECT id_dept_tb, deptName FROM dept_tb");
-                 ResultSet rs = ps.executeQuery()) {
-
-                while (rs.next()) {
-        %>
-                    <li>
-                        <a class="dropdown-item text-white"
-                           href="DeptComplaints.jsp?deptId=<%=rs.getInt("id_dept_tb")%>"
-                           target="rightFrame">
-                           <%=rs.getString("deptName")%>
-                        </a>
-                    </li>
-        <%
-                }
-            } catch (Exception e) {
-                out.println("<li><a class='dropdown-item text-danger'>Error loading departments</a></li>");
-            }
-        %>
-    </ul>
-</div>
-            <a href="../Notification.jsp" target="rightFrame"><i class="fa fa-file-alt"></i>&nbsp&nbspNotification</a>
+            <a href="SupAdmReports.jsp" target="rightFrame"><i class="fa fa-chart-bar"></i>&nbsp;&nbsp;Reports</a>
+            <a href="Logs.jsp" target="rightFrame"><i class="fa fa-file-alt"></i>&nbsp;&nbsp;Logs</a>
         </nav>
     </div>
 </div>

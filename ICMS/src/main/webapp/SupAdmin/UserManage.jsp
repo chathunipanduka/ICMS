@@ -125,7 +125,6 @@ if (username == null) {
           <th>Email</th>
           <th>Conatact No</th>
           <th>User Name</th>
-          <th>Password</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -150,7 +149,6 @@ try {
         String email = rs.getString("email");
         String contact = rs.getString("contactNo");
         String user_name = rs.getString("uName");
-        String pwd = rs.getString("pwd");
         String blockStatus = rs.getInt("isBlocked") == 1 ? "Blocked" : "Active";
 %>
 <tr>
@@ -160,7 +158,6 @@ try {
   <td><%= email %></td>
   <td><%= contact %></td>
   <td><%= user_name %></td>
-  <td><%= pwd %></td>
   
   <td>
     <a href="EditUser.jsp?id=<%= id %>" class="btn btn-sm btn-warning mb-1">Edit</a>
