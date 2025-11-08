@@ -20,6 +20,7 @@ public class UpdateAdmProfileServlet extends HttpServlet {
         throws ServletException, IOException {
     	
         String admname = (String) request.getSession().getAttribute("username");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         String admemail = request.getParameter("email");
         String admcontact = request.getParameter("contact");
 
@@ -34,6 +35,14 @@ public class UpdateAdmProfileServlet extends HttpServlet {
             e.printStackTrace();
         }
         response.sendRedirect(request.getContextPath() + "/DeptAdmin/DeptAdmDashboard.jsp");
+//Add Activity Logger--------------------------------------------------------------
+        
+        String ip = request.getRemoteAddr();
+        String userAgent = request.getHeader("User-Agent");
+
+        ActivityLogger.log(userId, "User","Update Profile", "User: " + admname + " Update Profile", ip, userAgent);
+        //-----------------------------------------------------------------------------------------
+        
     }
 }
 

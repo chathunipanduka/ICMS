@@ -29,6 +29,14 @@ public class AddDepartmentServlet extends HttpServlet {
 
             if (inserted > 0) {
                 out.println("<script>alert('Department added successfully!'); window.location='SupAdmin/AddNewDepartment.jsp';</script>");
+              //Add Activity Logger--------------------------------------------------------------
+                int userId = 1;
+                String ip = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                ActivityLogger.log(userId,"SupAdmin", "Add Department", "New Department: " + deptName + " Added", ip, userAgent);
+                //-----------------------------------------------------------------------------------------
+
             } else {
                 out.println("<script>alert('Failed to add department.'); window.location='SupAdmin/AddNewDepartment.jsp';</script>");
             }

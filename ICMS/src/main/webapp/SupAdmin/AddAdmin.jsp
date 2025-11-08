@@ -91,7 +91,6 @@
           <th>Contact No</th>
           <th>Email</th>
           <th>Username</th>
-          <th>Password</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
@@ -118,7 +117,6 @@
           <td><%= rs2.getString("deptAdmContactNo") %></td>
           <td><%= rs2.getString("deptAdmEmail") %></td>
           <td><%= rs2.getString("deptAdmUname") %></td>
-          <td><%= rs2.getString("deptAdmPwd") %></td>
           <td><%= blockStatus %></td>
           <td>
             <a href="EditAdmin.jsp?id=<%= id %>" class="btn btn-sm btn-warning">Edit</a>

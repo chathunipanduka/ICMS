@@ -25,6 +25,14 @@ public class DeleteDepartmentServlet extends HttpServlet {
 
             if (deleted > 0) {
                 out.println("<script>alert('Department deleted successfully!'); window.location='SupAdmin/AddNewDepartment.jsp';</script>");
+              //Add Activity Logger--------------------------------------------------------------
+                int userId = 1;
+                String ip = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                ActivityLogger.log(userId, "SupAdmin", "Delete Depatment", "Department: " + id + " Deleted", ip, userAgent);
+                //-----------------------------------------------------------------------------------------
+
             } else {
                 out.println("<script>alert('Failed to delete department.'); window.location='SupAdmin/AddNewDepartment.jsp';</script>");
             }

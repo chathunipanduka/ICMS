@@ -28,6 +28,14 @@ public class AddCategoryServlet extends HttpServlet {
 
             if (inserted > 0) {
                 response.sendRedirect("SupAdmin/AddCategory.jsp");
+              //Add Activity Logger--------------------------------------------------------------
+                int userId = 1;
+                String ip = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                ActivityLogger.log(userId,"SupAdmin", "Add Category", "New Category: " + categoryName + " Added", ip, userAgent);
+                //-----------------------------------------------------------------------------------------
+
             } else {
                 response.getWriter().println("Failed to add category!");
             }

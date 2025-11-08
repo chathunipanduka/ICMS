@@ -24,7 +24,7 @@ public class SuperAdminLoginServlet extends HttpServlet {
                 throw new ServletException("Database connection failed!");
             }
 
-            String sql = "SELECT SupAdmUname FROM supadm_tb WHERE SupAdmUname=? AND SupAdmPwd=?";
+            String sql = "SELECT idSupAdm_tb, SupAdmUname FROM supadm_tb WHERE SupAdmUname=? AND SupAdmPwd=?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, username);
                 ps.setString(2, password);
@@ -37,6 +37,14 @@ public class SuperAdminLoginServlet extends HttpServlet {
 
                         // Redirect to Dashboard
                         response.sendRedirect("SupAdmin/SupAdmDashboard.jsp");
+                      //Add Activity Logger--------------------------------------------------------------
+                        int userId = rs.getInt("idSupAdm_tb");
+                        String ip = request.getRemoteAddr();
+                        String userAgent = request.getHeader("User-Agent");
+
+                        ActivityLogger.log(userId, "SupAdmin", "Super Admin Loging",  username + " Logged in", ip, userAgent);
+                        //-----------------------------------------------------------------------------------------
+
                     } else {
                         // ❌ Wrong credentials → back to login
                         request.setAttribute("error", "Invalid Username or Password!");

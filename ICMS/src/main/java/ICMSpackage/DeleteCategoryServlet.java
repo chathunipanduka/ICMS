@@ -23,6 +23,14 @@ public class DeleteCategoryServlet extends HttpServlet {
 
             if (deleted > 0) {
                 response.sendRedirect("SupAdmin/AddCategory.jsp");
+              //Add Activity Logger--------------------------------------------------------------
+                int userId = 1;
+                String ip = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                ActivityLogger.log(userId,"SupAdmin", "Delete Category", "Category: " + id + " Deleted", ip, userAgent);
+                //-----------------------------------------------------------------------------------------
+
             } else {
                 response.getWriter().println("Failed to delete category!");
             }

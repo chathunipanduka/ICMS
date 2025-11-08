@@ -43,6 +43,9 @@ public class ForgotPasswordServlet extends HttpServlet {
 
                 request.getSession().setAttribute("resetEmail", email);
                 response.sendRedirect("VerifyResetOTP.jsp");
+                
+                
+                
             } else {
                 request.setAttribute("error", "No account found for this email.");
                 request.getRequestDispatcher("ForgotPassword.jsp").forward(request, response);

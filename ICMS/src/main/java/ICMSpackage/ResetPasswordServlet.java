@@ -30,16 +30,40 @@ public class ResetPasswordServlet extends HttpServlet {
         }
 
         try (Connection conn = IcmsConnection.getConnection()) {
+
+            // 1️⃣ Update the password
             String sql = "UPDATE login_tb SET pwd=?, otp_code=NULL, otp_expiry=NULL WHERE email=?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, newPwd); // ⚠️ hash in production
+            ps.setString(1, newPwd); // ⚠️ Hash this in production
             ps.setString(2, email);
-            ps.executeUpdate();
+            int updatedRows = ps.executeUpdate();
 
-            // clear session
-            request.getSession().removeAttribute("otpVerified");
-            request.getSession().removeAttribute("resetEmail");
+            if (updatedRows > 0) {
+                // 2️⃣ Get user ID and username for logging
+                String sql2 = "SELECT id_login_tb, uName FROM login_tb WHERE email=?";
+                PreparedStatement ps2 = conn.prepareStatement(sql2);
+                ps2.setString(1, email);
+                ResultSet rs2 = ps2.executeQuery();
 
+                if (rs2.next()) {
+                    int userId = rs2.getInt("id_login_tb");
+                    String username = rs2.getString("uName");
+                    String ip = request.getRemoteAddr();
+                    String userAgent = request.getHeader("User-Agent");
+
+                    // 3️⃣ Log the password reset
+                    ActivityLogger.log(userId, "User", "Password Reset", "User: " + username + " reset password", ip, userAgent);
+                }
+                rs2.close();
+                ps2.close();
+            }
+
+            // 4️⃣ Clear session attributes
+            HttpSession session = request.getSession();
+            session.removeAttribute("otpVerified");
+            session.removeAttribute("resetEmail");
+
+            // 5️⃣ Redirect to login
             response.sendRedirect("Login.jsp");
 
         } catch (Exception e) {

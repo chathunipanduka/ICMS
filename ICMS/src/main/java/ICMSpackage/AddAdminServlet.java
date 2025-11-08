@@ -35,6 +35,14 @@ public class AddAdminServlet extends HttpServlet {
             int i = ps.executeUpdate();
             if(i > 0){
                 response.sendRedirect("SupAdmin/AddAdmin.jsp");
+              //Add Activity Logger--------------------------------------------------------------
+                int userId = 1;
+                String ip = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                ActivityLogger.log(userId, "SupAdmin", "Add Admin", "New Admin: " + name + " Added", ip, userAgent);
+                //-----------------------------------------------------------------------------------------
+
             }else {
             	response.getWriter().println("Failed to add category!");
             }

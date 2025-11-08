@@ -31,6 +31,13 @@ public class UpdateDepartmentServlet extends HttpServlet {
 
             if (updated > 0) {
                 out.println("<script>alert('Department updated successfully!'); window.location='SupAdmin/AddNewDepartment.jsp';</script>");
+                //Add Activity Logger--------------------------------------------------------------
+                int userId = 1;
+                String ip = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                ActivityLogger.log(userId, "SupAdmin", "Update Department", "Department: " + deptName + " Updated", ip, userAgent);
+                //-----------------------------------------------------------------------------------------
             } else {
                 out.println("<script>alert('Update failed.'); window.location='SupAdmin/AddNewDepartment.jsp';</script>");
             }

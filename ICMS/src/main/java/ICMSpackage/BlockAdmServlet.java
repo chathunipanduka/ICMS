@@ -32,6 +32,14 @@ public class BlockAdmServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+      //Add Activity Logger--------------------------------------------------------------
+        int userId = 1;
+        String ip = request.getRemoteAddr();
+        String userAgent = request.getHeader("User-Agent");
+
+        ActivityLogger.log(userId,"SupAdmin", "Admin Blocked", id+ " Admin Blocked Status: " + status , ip, userAgent);
+        //-----------------------------------------------------------------------------------------
+
 
         response.sendRedirect("SupAdmin/AddAdmin.jsp"); // reload user list page
     }

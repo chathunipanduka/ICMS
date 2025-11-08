@@ -2,11 +2,7 @@ package ICMSpackage;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
 
@@ -23,8 +19,17 @@ public class UpdateComplaintStatusServlet extends HttpServlet {
         String status = request.getParameter("status");
         String userEmail = null;
         String description = null;
-        int userid ;
-        int deptid ;
+        int userid = 0;
+        int deptid = 0;
+
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("username") : null;
+        Integer adminId = (session != null) ? (Integer) session.getAttribute("userId") : null;
+
+        if (username == null || adminId == null) {
+            response.getWriter().println("❌ User not logged in.");
+            return;
+        }
 
         try (Connection conn = IcmsConnection.getConnection()) {
 
@@ -49,18 +54,8 @@ public class UpdateComplaintStatusServlet extends HttpServlet {
                     }
                 }
             }
-            
-            HttpSession session = request.getSession(false);
-            String username = (session != null) ? (String) session.getAttribute("username") : null;
 
-            if (username == null) {
-                response.getWriter().println("User not logged in.");
-                return;
-            }
-            
-            
-            
-            //Dept Id Get
+            // 2️⃣ Get department ID for the admin
             String deptSql = """
                 SELECT d.id_dept_tb 
                 FROM dept_tb d
@@ -79,42 +74,45 @@ public class UpdateComplaintStatusServlet extends HttpServlet {
                     }
                 }
             }
-            
-            
-            
 
-            // 2️⃣ Update complaint status
+            // 3️⃣ Update complaint status
             String updateSql = """
                 UPDATE complaint_tb 
                 SET status = ?, updated = CURRENT_TIMESTAMP 
                 WHERE id_complaint_tb = ?
             """;
+
             try (PreparedStatement ps = conn.prepareStatement(updateSql)) {
                 ps.setString(1, status);
                 ps.setInt(2, Integer.parseInt(id));
                 ps.executeUpdate();
             }
 
-         // ✅ Send email to user from DB
-        	String subject = "Complaint Staus Changed";
-        	String body = "Dear user,<br>Your complaint about <b>" + description + "</b> Status has been changed to <b>"+status+".</b> <hr>\r\n"
-        			+ "                    <footer style=\"font-size: 12px; color: #777;\">\r\n"
-        			+ "                        This is an automated message from ICMS.<br>\r\n"
-        			+ "                        Please do not reply to this email.<br>\r\n"
-        			+ "                        © %d ICMS Team\r\n"
-        			+ "                    </footer>";
-        	EmailHelper.sendEmail(userEmail, subject, body);
-        	
-        	
-        	String title = "Complaint Status Updated";
-        	String message = "The status of your complaint #" + id + " has been changed to " + status + ".";
-        	String type = "status_update";
-        	
-        	createNotification(conn, id, deptid, userid, title, message, type);
+            // 4️⃣ Send email to user
+            String subject = "Complaint Status Changed";
+            String body = "Dear user,<br>Your complaint about <b>" + description +
+                    "</b> status has been changed to <b>" + status + ".</b><hr>" +
+                    "<footer style='font-size:12px;color:#777;'>This is an automated message from ICMS.<br>" +
+                    "Please do not reply to this email.<br>&copy; ICMS Team</footer>";
+            EmailHelper.sendEmail(userEmail, subject, body);
 
+            // 5️⃣ Create notification
+            String title = "Complaint Status Updated";
+            String message = "The status of your complaint #" + id + " has been changed to " + status + ".";
+            String type = "status_update";
+            createNotification(conn, id, deptid, userid, title, message, type);
 
+            // 6️⃣ Add Activity Logger
+            String ip = request.getRemoteAddr();
+            String userAgent = request.getHeader("User-Agent");
+            String actionDesc = String.format(
+                    "Admin: %s (DeptID: %d) updated complaint ID %s (UserID: %d) status to %s",
+                    username, deptid, id, userid, status
+            );
 
-            // 4️⃣ Redirect back
+            ActivityLogger.log(adminId, "Admin", "Update Complaint Status", actionDesc, ip, userAgent);
+
+            // 7️⃣ Redirect back
             response.sendRedirect(request.getContextPath() + "/DeptAdmin/AdmComplaints.jsp");
 
         } catch (Exception e) {
@@ -122,20 +120,18 @@ public class UpdateComplaintStatusServlet extends HttpServlet {
             response.getWriter().println("❌ Error: " + e.getMessage());
         }
     }
-    
-    
-    private void createNotification(Connection conn, String id, int deptID, int userID, String title, String message, String type) throws SQLException {
-String sql = "INSERT INTO notification_tb (complaint_id, dept_id, user_id, message, type) VALUES (?,?,?,?,?)";
-try (PreparedStatement ps = conn.prepareStatement(sql)) {
-ps.setInt(1, Integer.parseInt(id));
-ps.setInt(2, deptID);
-ps.setInt(3, userID);
-ps.setString(4, message);
-ps.setString(5, type);
-ps.executeUpdate();
 
-System.out.println("SQL: " + sql.toString());
-}
-}
-
+    // Notification helper
+    private void createNotification(Connection conn, String id, int deptID, int userID, String title,
+                                    String message, String type) throws SQLException {
+        String sql = "INSERT INTO notification_tb (complaint_id, dept_id, user_id, message, type) VALUES (?,?,?,?,?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, Integer.parseInt(id));
+            ps.setInt(2, deptID);
+            ps.setInt(3, userID);
+            ps.setString(4, message);
+            ps.setString(5, type);
+            ps.executeUpdate();
+        }
+    }
 }

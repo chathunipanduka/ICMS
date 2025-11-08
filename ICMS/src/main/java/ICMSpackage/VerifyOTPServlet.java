@@ -19,7 +19,7 @@ public class VerifyOTPServlet extends HttpServlet {
         String username = (String) request.getSession().getAttribute("username");
 
         try (Connection conn = IcmsConnection.getConnection()) {
-            String sql = "SELECT otp_code, otp_expiry FROM login_tb WHERE uName=?";
+            String sql = "SELECT id_login_tb, otp_code, otp_expiry FROM login_tb WHERE uName=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
@@ -39,6 +39,14 @@ public class VerifyOTPServlet extends HttpServlet {
                     ps2.executeUpdate();
 
                     response.sendRedirect("Login.jsp");
+                  //Add Activity Logger--------------------------------------------------------------
+                    int userId = rs.getInt("id_login_tb");
+                    String ip = request.getRemoteAddr();
+                    String userAgent = request.getHeader("User-Agent");
+
+                    ActivityLogger.log(userId, "User", "User Register", "User: " + userId + " Registerd Successfully", ip, userAgent);
+                    //-----------------------------------------------------------------------------------------
+
                 } else {
                     request.setAttribute("error", "Invalid or expired OTP.");
                     request.getRequestDispatcher("VerifyOTP.jsp").forward(request, response);

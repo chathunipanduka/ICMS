@@ -36,6 +36,14 @@ public class UpdateAdminServlet extends HttpServlet {
             int i = ps.executeUpdate();
             if (i > 0) {
                 response.sendRedirect("SupAdmin/AddAdmin.jsp");
+              //Add Activity Logger--------------------------------------------------------------
+                int userId = 1;
+                String ip = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                ActivityLogger.log(userId,"SupAdmin", "Update Admin", "Admin: " + id + " Update", ip, userAgent);
+                //-----------------------------------------------------------------------------------------
+
             } else {
                 response.getWriter().println("Update failed!");
             }

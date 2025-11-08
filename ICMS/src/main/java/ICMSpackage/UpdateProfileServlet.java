@@ -20,6 +20,7 @@ public class UpdateProfileServlet extends HttpServlet {
         throws ServletException, IOException {
 
         String username = (String) request.getSession().getAttribute("username");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         String email = request.getParameter("email");
         String contact = request.getParameter("contact");
 
@@ -34,6 +35,13 @@ public class UpdateProfileServlet extends HttpServlet {
             e.printStackTrace();
         }
         response.sendRedirect(request.getContextPath() + "/User/UserDashboard.jsp");
+        //Add Activity Logger--------------------------------------------------------------
+        
+        String ip = request.getRemoteAddr();
+        String userAgent = request.getHeader("User-Agent");
+
+        ActivityLogger.log(userId, "User","Update Profile", "User: " + username + " Update Profile", ip, userAgent);
+        //-----------------------------------------------------------------------------------------
         
     }
 }
