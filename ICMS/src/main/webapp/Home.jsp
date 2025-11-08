@@ -287,10 +287,7 @@ footer {
   <div class="complaint-section">
     <h3 id="form-title" class="mb-4 text-center">Send Complaint Anonymously</h3>
     <form action="AnonymousSubmitComplaintServlet" method="post" enctype="multipart/form-data">
-      <div class="mb-3">
-        <label id="lbl-complaint" class="form-label">Enter Complaint</label>
-        <textarea class="form-control" rows="3" name="description"></textarea>
-      </div>
+      
       <div class="mb-3">
         <label class="form-label">Category</label>
         <select name="category" class="form-select" required>
@@ -319,8 +316,12 @@ footer {
         </select>
       </div>
       <div class="mb-3">
+        <label id="lbl-complaint" class="form-label">Enter Complaint and Other Details</label>
+        <textarea class="form-control" rows="3" name="description"></textarea>
+      </div>
+      <div class="mb-3">
         <label id="lbl-media" class="form-label">Upload Media</label>
-        <input type="file" class="form-control" name="media">
+        <input type="file" class="form-control" name="media" multiple>
       </div>
       <div class="mb-3">
         <label id="lbl-location" class="form-label">Tag Location</label>

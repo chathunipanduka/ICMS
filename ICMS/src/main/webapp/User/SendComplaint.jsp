@@ -19,10 +19,7 @@
 		<form method="post"
 			action="${pageContext.request.contextPath}/SubmitComplaintServlet"
 			enctype="multipart/form-data" onsubmit="showLoading()">
-			<div class="mb-3">
-				<label id="lbl-complaint">Complaint</label>
-				<textarea name="description" class="form-control" rows="3"></textarea>
-			</div>
+			
 			<div class="mb-3">
         <label class="form-label">Category</label>
         <select name="category" class="form-select" required>
@@ -52,9 +49,13 @@
           %>
         </select>
       </div>
+      <div class="mb-3">
+				<label id="lbl-complaint">Enter Complaint and Other Details</label>
+				<textarea name="description" class="form-control" rows="3"></textarea>
+			</div>
 			<div class="mb-3">
 				<label id="lbl-media">Upload Media</label> <input type="file"
-					class="form-control" name="media">
+					class="form-control" name="media" multiple>
 			</div>
 			<div class="mb-3">
 				<label id="lbl-location">Location</label> <input type="text"
@@ -133,35 +134,6 @@ function showLoading() {
 
 
 	<script>
-const translationsSend = {
-  en: {
-    "send-title": "Send Complaint",
-    "lbl-complaint": "Complaint",
-    "lbl-category": "Category",
-    "lbl-media": "Upload Media",
-    "lbl-location": "Location",
-    "btn-submit": "Submit Complaint",
-    "category-select": ["Roads and Pot Holes", "Water", "Electricity", "Garbage", "Other"]
-  },
-  si: {
-    "send-title": "පැමිණිල්ල යවන්න",
-    "lbl-complaint": "පැමිණිල්ල",
-    "lbl-category": "කාණ්ඩය",
-    "lbl-media": "මාධ්‍ය උඩුගත කරන්න",
-    "lbl-location": "ස්ථානය",
-    "btn-submit": "පැමිණිල්ල යවන්න",
-    "category-select": ["මාර්ග", "ජලය", "විදුලි", "කුණු", "වෙනත්"]
-  },
-  ta: {
-    "send-title": "புகார் அனுப்பவும்",
-    "lbl-complaint": "புகார்",
-    "lbl-category": "வகை",
-    "lbl-media": "மீடியா பதிவேற்றுக",
-    "lbl-location": "இடம்",
-    "btn-submit": "புகார் சமர்ப்பிக்கவும்",
-    "category-select": ["சாலைகள்", "தண்ணீர்", "மின்சாரம்", "குப்பை", "மற்றவை"]
-  }
-};
 
 // Change this to 'si' or 'ta' to test
 let lang = window.language || 'en';

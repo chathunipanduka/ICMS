@@ -174,13 +174,30 @@ try {
     <% } %>
   </td>
   <td>
-    <% if (media != null && media.length() > 0) { %>
-      <a href="../ViewMediaServlet?id=<%= id %>" target="_blank">
-        <img src="../ViewMediaServlet?id=<%= id %>" class="media-preview" alt="Complaint Image">
-      </a>
-    <% } else { %>
-      <span class="no-media">No Media</span>
-    <% } %>
+    <%
+    PreparedStatement psMedia = conn.prepareStatement(
+        "SELECT id_media FROM complaint_media_tb WHERE complaint_id = ? LIMIT 1");
+    psMedia.setInt(1, id);
+    ResultSet rsMedia = psMedia.executeQuery();
+
+    if (rsMedia.next()) {
+        int firstMediaId = rsMedia.getInt("id_media");
+%>
+        <img src="${pageContext.request.contextPath}/ViewMediaServlet?mediaId=<%= firstMediaId %>" 
+             class="media-preview" 
+             alt="Complaint Image"
+             data-bs-toggle="modal" 
+             data-bs-target="#mediaModal" 
+             data-complaint="<%= id %>">
+<%
+    } else {
+%>
+        <span class="no-media">No Media</span>
+<%
+    }
+    rsMedia.close();
+    psMedia.close();
+%>
   </td>
   <td><%= user_name != null ? user_name : "N/A" %></td>
   <td><%= location != null ? location : "N/A" %></td>
@@ -212,6 +229,53 @@ try {
 </div>
 <br>
 <br>
+
+	<!-- 📸 Modal to View All Images -->
+<div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="mediaModalLabel">Complaint Images</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center" id="mediaContainer">
+        <p class="text-muted">Loading images...</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Bootstrap JS (with Popper) -->
+<!-- Bootstrap JS Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Your custom JS -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mediaModal = document.getElementById('mediaModal');
+    const mediaContainer = document.getElementById('mediaContainer');
+    const contextPath = '<%= request.getContextPath() %>';
+
+    // Listen for modal show
+    mediaModal.addEventListener('show.bs.modal', function (event) {
+        const triggerImg = event.relatedTarget; // The clicked image
+        if (!triggerImg) return;
+
+        const complaintId = triggerImg.getAttribute('data-complaint');
+
+        mediaContainer.innerHTML = "<p class='text-muted'>Loading images...</p>";
+
+        fetch(contextPath + '/GetComplaintImagesServlet?complaintId=' + complaintId)
+            .then(response => response.text())
+            .then(html => {
+                mediaContainer.innerHTML = html;
+            })
+            .catch(err => {
+                console.error('Image load error:', err);
+                mediaContainer.innerHTML = "<p class='text-danger'>Failed to load images.</p>";
+            });
+    });
+});
+</script>
 
 <!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
