@@ -170,6 +170,7 @@ footer {
 </div>
 
 <div class="map-section">
+<h2>Map of Grama Seva Divisions in the Biyagama Pradeshiya Sabha area</h2>
   <img src="media/map.jpg" alt="Map" class="img-fluid">
 </div>
 
