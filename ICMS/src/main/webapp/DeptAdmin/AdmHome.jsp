@@ -4,10 +4,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- ✅ Makes responsive -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin Home</title>
 
-<!-- Bootstrap 5 CSS -->
+<!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
@@ -35,7 +35,7 @@ footer {
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
 
-/* ✅ Responsive Chart Containers */
+/* ✅ Chart containers responsive */
 .chart-container {
   position: relative;
   width: 100%;
@@ -44,7 +44,7 @@ footer {
   margin: 0 auto;
 }
 
-/* ✅ Mobile Adjustments */
+/* ✅ Mobile adjustments */
 @media (max-width: 768px) {
   .card {
     padding: 1rem !important;
@@ -98,13 +98,56 @@ footer {
             else if ("InProgress".equalsIgnoreCase(status)) inprogressCount = count;
         }
     } catch (Exception e) { e.printStackTrace(); }
+
+    // ✅ Fetch average rating and badge
+    double avgRating = 0.0;
+    String badge = "";
+    String badgeImage = "";
+
+    try (Connection con = IcmsConnection.getConnection()) {
+        String sql = "SELECT AVG(rating) AS avg_rating FROM complaint_tb " +
+                     "WHERE dept_id = (SELECT id_dept_tb FROM dept_tb WHERE deptName = ?) AND rating > 0";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, deptName);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) avgRating = rs.getDouble("avg_rating");
+
+        if (avgRating >= 4.5) {
+            badge = "Platinum";
+            badgeImage = "../media/Platinum.png";
+        } else if (avgRating >= 3.5) {
+            badge = "Gold";
+            badgeImage = "../media/Gold.png";
+        } else if (avgRating >= 2.5) {
+            badge = "Silver";
+            badgeImage = "../media/Silver.png";
+        } else if (avgRating > 0) {
+            badge = "Copper";
+            badgeImage = "../media/Copper.png";
+        } else {
+            badge = "No Rating Yet";
+            badgeImage = "../media/No.png";
+        }
+    } catch (Exception e) { e.printStackTrace(); }
 %>
+
+<!-- ✅ Department Badge Section -->
+<div class="container mt-4 text-center">
+  <h2 class="text-primary mb-2"><%= deptName %> Department</h2>
+  <p class="text-secondary mb-1">Average Rating: <%= String.format("%.2f", avgRating) %></p>
+  <div class="d-flex justify-content-center align-items-center flex-column">
+    <img src="<%= badgeImage %>" alt="<%= badge %> Badge" class="img-fluid" style="width:500px; height:auto;">
+    <!-- <h5 class="mt-2 fw-bold"><%= badge %> Badge</h5> -->
+  </div>
+</div>
+<hr>
+
+
 
 <div class="container mt-4">
   <h2 class="text-center text-primary mb-4">Complaints Overview</h2>
 
   <div class="row g-4 justify-content-center">
-    <!-- Solved Complaints -->
     <div class="col-10 col-sm-6 col-md-4">
       <div class="card text-center p-4">
         <h5 class="card-title text-success">Solved Complaints</h5>
@@ -113,7 +156,6 @@ footer {
       </div>
     </div>
 
-    <!-- Pending Complaints -->
     <div class="col-10 col-sm-6 col-md-4">
       <div class="card text-center p-4">
         <h5 class="card-title text-warning">Pending Complaints</h5>
@@ -122,7 +164,6 @@ footer {
       </div>
     </div>
 
-    <!-- In Progress Complaints -->
     <div class="col-10 col-sm-6 col-md-4">
       <div class="card text-center p-4">
         <h5 class="card-title text-primary">In Progress</h5>
@@ -135,11 +176,14 @@ footer {
 
 <hr>
 
+
+
+<hr class="my-4">
+
 <div class="container mt-5">
   <h3 class="text-center text-primary mb-4">Complaints Summary</h3>
 
   <div class="row justify-content-center gy-5">
-    <!-- Pie Chart -->
     <div class="col-12 col-md-6 text-center">
       <h5 class="text-secondary mb-3">Complaints by Status</h5>
       <div class="chart-container">
@@ -147,7 +191,6 @@ footer {
       </div>
     </div>
 
-    <!-- Bar Chart -->
     <div class="col-12 col-md-6 text-center">
       <h5 class="text-secondary mb-3">Complaints Comparison</h5>
       <div class="chart-container">
@@ -157,41 +200,38 @@ footer {
   </div>
 </div>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const solved = <%= solvedCount %>;
 const pending = <%= pendingCount %>;
 const inProgress = <%= inprogressCount %>;
 
-const pieData = {
-  labels: ['Solved', 'Pending', 'In Progress'],
-  datasets: [{
-    data: [solved, pending, inProgress],
-    backgroundColor: ['#28a745a0','#ffc107a0','#0d6efd90'],
-    borderColor: ['#28a745','#ffc107','#0d6efd'],
-    borderWidth: 2
-  }]
-};
 new Chart(document.getElementById('complaintPieChart'), {
   type: 'pie',
-  data: pieData,
+  data: {
+    labels: ['Solved', 'Pending', 'In Progress'],
+    datasets: [{
+      data: [solved, pending, inProgress],
+      backgroundColor: ['#28a745a0','#ffc107a0','#0d6efd90'],
+      borderColor: ['#28a745','#ffc107','#0d6efd'],
+      borderWidth: 2
+    }]
+  },
   options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
 });
 
-const barData = {
-  labels: ['Solved', 'Pending', 'In Progress'],
-  datasets: [{
-    label: 'Number of Complaints',
-    data: [solved, pending, inProgress],
-    backgroundColor: ['#28a745a0','#ffc107a0','#0d6efd90'],
-    borderColor: ['#28a745','#ffc107','#0d6efd'],
-    borderWidth: 2
-  }]
-};
 new Chart(document.getElementById('complaintBarChart'), {
   type: 'bar',
-  data: barData,
+  data: {
+    labels: ['Solved', 'Pending', 'In Progress'],
+    datasets: [{
+      label: 'Number of Complaints',
+      data: [solved, pending, inProgress],
+      backgroundColor: ['#28a745a0','#ffc107a0','#0d6efd90'],
+      borderColor: ['#28a745','#ffc107','#0d6efd'],
+      borderWidth: 2
+    }]
+  },
   options: {
     responsive: true,
     maintainAspectRatio: false,
@@ -201,17 +241,13 @@ new Chart(document.getElementById('complaintBarChart'), {
 });
 </script>
 
-<!-- Footer -->
-<footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
+<footer class="text-light pt-4" style="background-color: #00274d; width:99.5%; padding:15px;">
   <div class="container1">
     <div class="row text-center text-md-start">
-      <!-- About Section -->
       <div class="col-md-4 mb-3">
         <h5>Biyagama Pradeshiya Sabha</h5>
         <p>Providing efficient infrastructure complaint management and citizen services for a better community.</p>
       </div>
-
-      <!-- Quick Links -->
       <div class="col-md-4 mb-3">
         <h5>Quick Links</h5>
         <ul class="list-unstyled">
@@ -220,18 +256,14 @@ new Chart(document.getElementById('complaintBarChart'), {
           <li><a href="about.jsp" class="text-light text-decoration-none">About Us</a></li>
         </ul>
       </div>
-
-      <!-- Contact Info -->
       <div class="col-md-4 mb-3">
         <h5>Contact Us</h5>
         <p>Email: info@biyagama.ps.lk</p>
         <p>Phone: +94 11 234 5678</p>
-        <p>Address: Biyagama Pradeshiya Sabha, <br>Biyagama, Sri Lanka</p>
+        <p>Address: Biyagama Pradeshiya Sabha,<br>Biyagama, Sri Lanka</p>
       </div>
     </div>
-
     <hr class="bg-light">
-
     <div class="text-center pb-3">
       &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
     </div>
