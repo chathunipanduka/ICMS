@@ -15,13 +15,12 @@ if (username == null) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- ✅ Important for mobile -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Complaints</title>
 
 <!-- Bootstrap CSS -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <style>
 body {
@@ -101,59 +100,40 @@ th {
 	overflow-x: auto;
 }
 
-
+/* ⭐ Rating Styles */
+.rating-stars i {
+	font-size: 1.3rem;
+	cursor: pointer;
+	color: #ccc;
+	transition: color 0.2s;
+}
+.rating-stars i.active,
+.rating-stars i:hover,
+.rating-stars i:hover ~ i {
+	color: #ffc107;
+}
 
 /* ===== Responsive Breakpoints ===== */
-
-/* Tablets */
 @media (max-width: 992px) {
-	h2 {
-		font-size: 1.6rem;
-	}
-	.media-preview {
-		width: 65px;
-		height: 65px;
-	}
-	.table {
-		font-size: 14px;
-	}
+	h2 { font-size: 1.6rem; }
+	.media-preview { width: 65px; height: 65px; }
+	.table { font-size: 14px; }
 }
 
-/* Mobile */
 @media (max-width: 768px) {
-	.container {
-		padding: 15px;
-		margin-top: 25px;
-	}
-	h2 {
-		font-size: 1.4rem;
-	}
-	th, td {
-		font-size: 13px;
-		padding: 8px;
-	}
-	.media-preview {
-		width: 60px;
-		height: 60px;
-	}
-	footer {
-		font-size: 12px;
-		padding: 10px;
-		line-height: 1.4;
-	}
+	.container { padding: 15px; margin-top: 25px; }
+	h2 { font-size: 1.4rem; }
+	th, td { font-size: 13px; padding: 8px; }
+	.media-preview { width: 60px; height: 60px; }
+	footer { font-size: 12px; padding: 10px; line-height: 1.4; }
 }
-
-
-
 </style>
 </head>
 <body>
 
-
 	<div class="container">
 		<h2>📋 My Submitted Complaints</h2>
 
-		<!-- ✅ Makes table horizontally scrollable on small screens -->
 		<div class="table-responsive">
 			<table class="table table-bordered table-hover align-middle text-center">
 				<thead>
@@ -164,6 +144,7 @@ th {
 						<th>Status</th>
 						<th>Media</th>
 						<th>Date/Time</th>
+						<th>Rating</th> <!-- ⭐ Added -->
 					</tr>
 				</thead>
 				<tbody>
@@ -174,7 +155,7 @@ th {
 					try {
 						conn = IcmsConnection.getConnection();
 
-						String sql = "SELECT c.id_complaint_tb, c.description, c.status, c.media, c.date_time, d.deptName "
+						String sql = "SELECT c.id_complaint_tb, c.description, c.status, c.media, c.date_time, c.rating, d.deptName "
 								+ "FROM complaint_tb c "
 								+ "LEFT JOIN dept_tb d ON c.dept_id = d.id_dept_tb "
 								+ "WHERE c.user_id = (SELECT id_login_tb FROM login_tb WHERE uName = ?) "
@@ -191,6 +172,7 @@ th {
 							String deptName = rs.getString("deptName");
 							String desc = rs.getString("description");
 							String status = rs.getString("status");
+							int rating = rs.getInt("rating");
 							Timestamp dateTime = rs.getTimestamp("date_time");
 							Blob media = rs.getBlob("media");
 					%>
@@ -226,16 +208,43 @@ th {
 %>
 						</td>
 						<td><%=dateTime%></td>
+						<td>
+							<% if ("Solved".equalsIgnoreCase(status)) { %>
+								<% if (rating == 0) { %>
+									<form action="SubmitRatingServlet" method="post" class="rating-form">
+										<input type="hidden" name="complaint_id" value="<%= id %>">
+										<input type="hidden" name="rating" class="rating-value" value="0">
+										<div class="rating-stars">
+											<i class="bi bi-star" data-value="1"></i>
+											<i class="bi bi-star" data-value="2"></i>
+											<i class="bi bi-star" data-value="3"></i>
+											<i class="bi bi-star" data-value="4"></i>
+											<i class="bi bi-star" data-value="5"></i>
+										</div>
+										<button type="submit" class="btn btn-sm btn-primary mt-1">Submit</button>
+									</form>
+								<% } else { %>
+									<% for (int i = 1; i <= rating; i++) { %>
+										<i class="bi bi-star-fill text-warning"></i>
+									<% } %>
+									<% for (int i = rating + 1; i <= 5; i++) { %>
+										<i class="bi bi-star text-secondary"></i>
+									<% } %>
+								<% } %>
+							<% } else { %>
+								<em>Pending</em>
+							<% } %>
+						</td>
 					</tr>
 					<%
 						}
 
 						if (!hasData) {
-							out.println("<tr><td colspan='6' class='text-muted'>No complaints submitted yet.</td></tr>");
+							out.println("<tr><td colspan='7' class='text-muted'>No complaints submitted yet.</td></tr>");
 						}
 
 					} catch (Exception e) {
-						out.println("<tr><td colspan='6' class='text-danger'>Error: " + e.getMessage() + "</td></tr>");
+						out.println("<tr><td colspan='7' class='text-danger'>Error: " + e.getMessage() + "</td></tr>");
 					} finally {
 						try { if (rs != null) rs.close(); } catch (Exception ignored) {}
 						try { if (ps != null) ps.close(); } catch (Exception ignored) {}
@@ -261,31 +270,41 @@ th {
     </div>
   </div>
 </div>
-<!-- Bootstrap JS (with Popper) -->
-<!-- Bootstrap JS Bundle (includes Popper) -->
+
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Your custom JS -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // ⭐ Rating stars click
+    document.querySelectorAll('.rating-stars').forEach(container => {
+        const stars = container.querySelectorAll('i');
+        const ratingInput = container.parentElement.querySelector('.rating-value');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = parseInt(star.getAttribute('data-value'));
+                ratingInput.value = value;
+                stars.forEach(s => s.classList.remove('bi-star-fill', 'text-warning'));
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add('bi-star-fill', 'text-warning');
+                }
+            });
+        });
+    });
+
+    // 📸 Modal image loading
     const mediaModal = document.getElementById('mediaModal');
     const mediaContainer = document.getElementById('mediaContainer');
     const contextPath = '<%= request.getContextPath() %>';
 
-    // Listen for modal show
     mediaModal.addEventListener('show.bs.modal', function (event) {
-        const triggerImg = event.relatedTarget; // The clicked image
+        const triggerImg = event.relatedTarget;
         if (!triggerImg) return;
-
         const complaintId = triggerImg.getAttribute('data-complaint');
-
         mediaContainer.innerHTML = "<p class='text-muted'>Loading images...</p>";
-
         fetch(contextPath + '/GetComplaintImagesServlet?complaintId=' + complaintId)
             .then(response => response.text())
-            .then(html => {
-                mediaContainer.innerHTML = html;
-            })
+            .then(html => { mediaContainer.innerHTML = html; })
             .catch(err => {
                 console.error('Image load error:', err);
                 mediaContainer.innerHTML = "<p class='text-danger'>Failed to load images.</p>";
@@ -294,19 +313,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-
-
-	<!-- Footer -->
+<!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
   <div class="container1">
     <div class="row text-center text-md-start">
-      <!-- About Section -->
       <div class="col-md-4 mb-3">
         <h5>Biyagama Pradeshiya Sabha</h5>
         <p>Providing efficient infrastructure complaint management and citizen services for a better community.</p>
       </div>
-
-      <!-- Quick Links -->
       <div class="col-md-4 mb-3">
         <h5>Quick Links</h5>
         <ul class="list-unstyled">
@@ -315,8 +329,6 @@ document.addEventListener('DOMContentLoaded', function() {
           <li><a href="about.jsp" class="text-light text-decoration-none">About Us</a></li>
         </ul>
       </div>
-
-      <!-- Contact Info -->
       <div class="col-md-4 mb-3">
         <h5>Contact Us</h5>
         <p>Email: info@biyagama.ps.lk</p>
@@ -324,15 +336,12 @@ document.addEventListener('DOMContentLoaded', function() {
         <p>Address: Biyagama Pradeshiya Sabha, <br>Biyagama, Sri Lanka</p>
       </div>
     </div>
-
     <hr class="bg-light">
-
     <div class="text-center pb-3">
       &copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.
     </div>
   </div>
 </footer>
-
 
 </body>
 </html>
