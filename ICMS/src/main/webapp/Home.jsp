@@ -317,7 +317,7 @@ footer {
       </div>
       <div class="mb-3">
         <label id="lbl-complaint" class="form-label">Enter Complaint and Other Details</label>
-        <textarea class="form-control" rows="3" name="description"></textarea>
+        <textarea class="form-control" rows="3" name="description" placeholder="Example: Broken Light, Tower 18, Nearby Reception hall"></textarea>
       </div>
       <div class="mb-3">
         <label id="lbl-media" class="form-label">Upload Media</label>
@@ -325,7 +325,7 @@ footer {
       </div>
       <div class="mb-3">
         <label id="lbl-location" class="form-label">Tag Location</label>
-        <input type="text" class="form-control" placeholder="Enter location" name="location">
+        <input type="text" class="form-control" placeholder="Example: Exact Location(Malwana Tower18) or Landmark(Near the Malwana water tank)" name="location">
       </div>
       <small id="private-reply" class="text-muted">If you want a private reply, please <a href="Login.jsp" id="login-link">Login here</a></small>
       <button type="submit" class="btn btn-primary w-100 mt-3" id="btn-submit">Submit Complaint</button>

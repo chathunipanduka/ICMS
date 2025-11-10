@@ -113,7 +113,17 @@ if (username == null) {
 
 <div class="container">
   <h2 class="text-center mb-4">All Users</h2>
-
+  
+  <form method="get" class="row g-2 mb-4">
+  <div class="col-md-3 mt-2">
+    <label class="form-label">Search</label>
+    <input type="text" name="search" class="form-control form-control-sm" placeholder="Keyword or ID"
+           value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>">
+  </div>
+  <div class="col-md-2 align-self-end">
+    <button type="submit" class="btn btn-primary btn-sm w-100">Search</button>
+  </div>
+</form>
   <!-- ✅ Responsive table wrapper -->
   <div class="table-responsive">
     <table class="table table-bordered table-hover align-middle text-center">
@@ -133,13 +143,37 @@ if (username == null) {
 Connection conn = null;
 PreparedStatement ps = null;
 ResultSet rs = null;
+
+String fSearch = request.getParameter("search");
 try {
     conn = IcmsConnection.getConnection();
-    String sql = "SELECT id_login_tb, firstName, lastName, email, contactNo, uName, pwd, isBlocked FROM login_tb " +
-                 "ORDER BY id_login_tb DESC";
-    ps = conn.prepareStatement(sql);
+    
+    StringBuilder sql = new StringBuilder(
+        "SELECT id_login_tb, firstName, lastName, email, contactNo, uName, pwd, isBlocked " +
+        "FROM login_tb WHERE 1=1 "
+    );
+    
+    List<String> params = new ArrayList<>();
+    
+    if (fSearch != null && !fSearch.trim().isEmpty()) {
+        sql.append(" AND (id_login_tb LIKE ? OR firstName LIKE ? OR lastName LIKE ? OR uName LIKE ? OR email LIKE ?) ");
+        String s = "%" + fSearch.trim() + "%";
+        for (int i = 0; i < 5; i++) {
+            params.add(s);
+        }
+    }
+    
+    sql.append(" ORDER BY id_login_tb DESC");
+    
+    ps = conn.prepareStatement(sql.toString());
+    
+    // Bind parameters
+    for (int i = 0; i < params.size(); i++) {
+        ps.setString(i + 1, params.get(i));
+    }
+    
     rs = ps.executeQuery();
-
+    
     boolean hasData = false;
     while (rs.next()) {
         hasData = true;

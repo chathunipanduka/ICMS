@@ -51,15 +51,15 @@
       </div>
       <div class="mb-3">
 				<label id="lbl-complaint">Enter Complaint and Other Details</label>
-				<textarea name="description" class="form-control" rows="3"></textarea>
+				<textarea name="description" class="form-control" rows="3" placeholder="Example: Broken Light, Tower 18, Nearby Reception hall"></textarea>
 			</div>
 			<div class="mb-3">
 				<label id="lbl-media">Upload Media</label> <input type="file"
 					class="form-control" name="media" multiple>
 			</div>
 			<div class="mb-3">
-				<label id="lbl-location">Location</label> <input type="text"
-					class="form-control" placeholder="Tag Location" name="location">
+				<label id="lbl-location">Location</label> 
+				<input type="text" class="form-control"  name="location" placeholder="Example: Exact Location(Malwana Tower18) or Landmark(Near the Malwana water tank)">
 			</div>
 			<button type="submit" class="btn btn-primary" id="btn-submit">Submit
 				Complaint</button>
