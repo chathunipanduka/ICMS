@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- ✅ Important for responsiveness -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>All Complaints - Super Admin</title>
 
 <!-- Bootstrap 5 -->
@@ -53,6 +53,31 @@ th {
   font-size: 13px;
 }
 
+/* Inline edit styles */
+.editable {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.editable:hover {
+  background-color: #fff3cd !important;
+}
+.edit-input {
+  width: 100%;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+}
+.edit-textarea {
+  width: 100%;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
+}
+
 /* Footer styling */
 footer {
   background-color: #00274d;
@@ -69,16 +94,13 @@ footer {
     margin-top: 20px;
     padding: 15px;
   }
-
   table {
     font-size: 14px;
   }
-
   .media-preview {
     width: 60px;
     height: 60px;
   }
-
   h2 {
     font-size: 20px;
   }
@@ -116,6 +138,24 @@ if (username == null) {
 <div class="container">
   <h2 class="text-center mb-4">📋 All Submitted Complaints</h2>
   
+  <!-- Display success/error messages -->
+  <% 
+  String success = request.getParameter("success");
+  String error = request.getParameter("error");
+  if (success != null) { 
+  %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+          ✅ <%= success %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+  <% } %>
+  <% if (error != null) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          ❌ <%= error %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+  <% } %>
+  
   <!-- --- FILTERS ADDED: start --- -->
   <form method="get" class="row g-2 mb-4">
     <div class="col-md-3">
@@ -123,7 +163,6 @@ if (username == null) {
       <select name="department" class="form-select form-select-sm">
         <option value="">All</option>
         <%
-          // populate department options
           try (Connection dcon = IcmsConnection.getConnection()) {
               PreparedStatement dps = dcon.prepareStatement("SELECT deptName FROM dept_tb");
               ResultSet drs = dps.executeQuery();
@@ -136,7 +175,7 @@ if (username == null) {
               }
               drs.close();
               dps.close();
-          } catch (Exception e) { /* ignore here, main code will handle errors */ }
+          } catch (Exception e) { }
         %>
       </select>
     </div>
@@ -183,11 +222,21 @@ if (username == null) {
     </div>
   </form>
   <!-- --- FILTERS ADDED: end --- -->
-  <form method="post" action="${pageContext.request.contextPath}/ComplaintReportServlet">
-  <!-- your filter inputs (department, status, etc.) here -->
   
-  <button type="button" class="btn btn-danger" onclick="exportPageToPDF()">Export PDF</button>
-</form>
+  <!-- Export Buttons -->
+  <div class="d-flex gap-2 mb-3">
+    <form method="post" action="${pageContext.request.contextPath}/SupAdmComplaintReportServlet" class="d-inline">
+      <input type="hidden" name="department" value="<%= request.getParameter("department") != null ? request.getParameter("department") : "" %>">
+      <input type="hidden" name="status" value="<%= request.getParameter("status") != null ? request.getParameter("status") : "" %>">
+      <input type="hidden" name="location" value="<%= request.getParameter("location") != null ? request.getParameter("location") : "" %>">
+      <input type="hidden" name="fromDate" value="<%= request.getParameter("fromDate") != null ? request.getParameter("fromDate") : "" %>">
+      <input type="hidden" name="toDate" value="<%= request.getParameter("toDate") != null ? request.getParameter("toDate") : "" %>">
+      <input type="hidden" name="search" value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>">
+      
+      <button type="submit" name="exportType" value="excel" class="btn btn-success">📊 Export Excel</button>
+      <button type="submit" name="exportType" value="pdf" class="btn btn-danger">📄 Export PDF</button>
+    </form>
+  </div>
 <br>
   
   <!-- ✅ Responsive table wrapper -->
@@ -220,10 +269,10 @@ String fFromDate = request.getParameter("fromDate");
 String fToDate = request.getParameter("toDate");
 String fSearch = request.getParameter("search");
 
+
 try {
     conn = IcmsConnection.getConnection();
 
-    // Build dynamic SQL (start with base)
     StringBuilder sql = new StringBuilder(
         "SELECT c.id_complaint_tb, c.description, c.status, c.media, c.location, c.date_time, " +
         "d.deptName, l.uName AS username " +
@@ -272,7 +321,6 @@ try {
 
     ps = conn.prepareStatement(sql.toString());
 
-    // Bind parameters
     for (int i = 0; i < bindParams.size(); i++) {
         Object o = bindParams.get(i);
         if (o instanceof java.sql.Date) {
@@ -294,26 +342,30 @@ try {
         String location = rs.getString("location");
         String user_name = rs.getString("username");
         Timestamp dateTime = rs.getTimestamp("date_time");
-        // Note: original code referenced 'updated' in some versions; keep same columns as original select
 %>
 <tr>
   <td><%= id %></td>
   <td><%= dept_Name != null ? dept_Name : "N/A" %></td>
-  <td class="text-break" style="max-width:200px;"><%= desc %></td>
+  
+  <!-- Editable Description -->
   <td>
-    <% if ("Pending".equalsIgnoreCase(status)) { %>
-        <span class="badge bg-warning text-dark">Pending</span>
-    <% } else if ("InProgress".equalsIgnoreCase(status)) { %>
-        <span class="badge bg-info text-dark">In Progress</span>
-    <% } else if ("Solved".equalsIgnoreCase(status)) { %>
-        <span class="badge bg-success">Solved</span>
-    <% } else { %>
-        <span class="badge bg-secondary">Unknown</span>
-    <% } %>
+    <form method="post" action="${pageContext.request.contextPath}/SupAdmInlineEditComplaintServlet" class="d-inline">
+      <input type="hidden" name="id" value="<%= id %>">
+      <textarea name="description" class="form-control form-control-sm" rows="3" 
+                style="font-size: 14px; min-height: 80px;"><%= desc %></textarea>
   </td>
+  
+  <!-- Editable Status -->
+  <td>
+      <select name="status" class="form-select form-select-sm" style="font-size: 14px;">
+        <option value="Pending" <%= "Pending".equals(status) ? "selected" : "" %>>Pending</option>
+        <option value="InProgress" <%= "InProgress".equals(status) ? "selected" : "" %>>In Progress</option>
+        <option value="Solved" <%= "Solved".equals(status) ? "selected" : "" %>>Solved</option>
+      </select>
+  </td>
+  
   <td>
     <%
-    // --- IMAGE LOGIC KEPT EXACTLY AS YOUR ORIGINAL ---
     PreparedStatement psMedia = conn.prepareStatement(
         "SELECT id_media FROM complaint_media_tb WHERE complaint_id = ? LIMIT 1");
     psMedia.setInt(1, id);
@@ -336,21 +388,36 @@ try {
     }
     rsMedia.close();
     psMedia.close();
-    // --- end original image logic ---
     %>
   </td>
+  
   <td><%= user_name != null ? user_name : "N/A" %></td>
-  <td><%= location != null ? location : "N/A" %></td>
+  
+  <!-- Editable Location -->
+  <td>
+      <input type="text" name="location" class="form-control form-control-sm" 
+             value="<%= location != null ? location : "" %>" 
+             style="font-size: 14px;">
+  </td>
+  
   <td><%= dateTime %></td>
   <td>
-    <a href="EditComplaint.jsp?id=<%= id %>" class="btn btn-sm btn-warning mb-1">Edit</a>
-    <a href="${pageContext.request.contextPath}/DeleteComplaintServlet?id=<%= id %>"
-       class="btn btn-sm btn-danger"
-       onclick="return confirm('Are you sure you want to delete this complaint?');" >  Delete </a>
+    <div class="btn-group-vertical" role="group" style="min-width: 120px;">
+      <button type="submit" class="btn btn-sm btn-success mb-1">
+        💾 Save
+      </button>
+      </form>
+      
+      <a href="${pageContext.request.contextPath}/SupAdmDeleteComplaintServlet?id=<%= id %>"
+         class="btn btn-sm btn-danger"
+         onclick="return confirm('Are you sure you want to delete complaint #<%= id %>?');">
+        🗑️ Delete
+      </a>
+    </div>
   </td>
 </tr>
 <%
-    } // end while
+    }
 
     if (!hasData) {
 %>
@@ -370,10 +437,8 @@ try {
     </table>
   </div>
 </div>
-<br>
-<br>
 
-  <!-- 📸 Modal to View All Images -->
+<!-- 📸 Modal to View All Images -->
 <div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
@@ -387,78 +452,210 @@ try {
     </div>
   </div>
 </div>
+
 <!-- Bootstrap JS (with Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Your custom JS -->
 <script>
+let editingRowId = null;
+
+function enableEdit(rowId, field, element) {
+    console.log('Enabling edit for row:', rowId, 'field:', field);
+    
+    if (editingRowId && editingRowId !== rowId) {
+        cancelEdit(editingRowId);
+    }
+    
+    editingRowId = rowId;
+    
+    const displayElement = document.getElementById(field + '-' + rowId);
+    const editElement = document.getElementById('edit-' + field + '-' + rowId);
+    
+    if (displayElement && editElement) {
+        displayElement.classList.add('d-none');
+        editElement.classList.remove('d-none');
+        editElement.focus();
+    }
+}
+
+function cancelEdit(rowId) {
+    console.log('Canceling edit for row:', rowId);
+    const fields = ['description', 'status', 'location'];
+    fields.forEach(field => {
+        const displayElement = document.getElementById(field + '-' + rowId);
+        const editElement = document.getElementById('edit-' + field + '-' + rowId);
+        
+        if (displayElement && editElement) {
+            // Reset edit fields to original values
+            if (field === 'description') {
+                editElement.value = displayElement.textContent;
+            } else if (field === 'location') {
+                editElement.value = displayElement.textContent === 'N/A' ? '' : displayElement.textContent;
+            }
+            
+            displayElement.classList.remove('d-none');
+            editElement.classList.add('d-none');
+        }
+    });
+    editingRowId = null;
+}
+
+function saveAllChanges(rowId) {
+    console.log('=== SAVE ATTEMPT STARTED ===');
+    console.log('Row ID:', rowId);
+    
+    // Get current values from edit fields
+    const description = document.getElementById('edit-description-' + rowId)?.value || '';
+    const status = document.getElementById('edit-status-' + rowId)?.value || '';
+    const location = document.getElementById('edit-location-' + rowId)?.value || '';
+    
+    console.log('Values to save:');
+    console.log('- Description:', description);
+    console.log('- Status:', status);
+    console.log('- Location:', location);
+    
+    // Validate data
+    if (!description.trim()) {
+        showMessage('❌ Description cannot be empty', 'danger');
+        return;
+    }
+    
+    if (!status) {
+        showMessage('❌ Status cannot be empty', 'danger');
+        return;
+    }
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('id', rowId.toString());
+    formData.append('description', description.trim());
+    formData.append('status', status);
+    formData.append('location', location.trim());
+    
+    // Show loading state
+    const saveBtn = document.querySelector(`button[onclick="saveAllChanges(${rowId})"]`);
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = '⏳ Saving...';
+    saveBtn.disabled = true;
+    
+    // Get context path
+    const contextPath = '${pageContext.request.contextPath}';
+    const url = contextPath + '/SupAdmInlineEditComplaintServlet';
+    
+    console.log('Sending POST request to:', url);
+    
+    // Send AJAX request
+    fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        console.log('Response status:', response.status, response.statusText);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data received:', data);
+        
+        // Restore button state
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+        
+        if (data.success) {
+            showMessage('✅ ' + data.message, 'success');
+            
+            // Update display with new values
+            updateDisplayValues(rowId, description, status, location);
+            
+            // Exit edit mode
+            cancelEdit(rowId);
+            
+            console.log('=== SAVE SUCCESSFUL ===');
+        } else {
+            showMessage('❌ ' + data.message, 'danger');
+            console.error('Save failed:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        
+        // Restore button state
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+        
+        showMessage('❌ Network error: ' + error.message, 'danger');
+    });
+}
+
+function updateDisplayValues(rowId, description, status, location) {
+    // Update description
+    const descDisplay = document.getElementById('description-' + rowId);
+    if (descDisplay) {
+        descDisplay.textContent = description;
+    }
+    
+    // Update location
+    const locDisplay = document.getElementById('location-' + rowId);
+    if (locDisplay) {
+        locDisplay.textContent = location || 'N/A';
+    }
+    
+    // Update status badge
+    updateStatusBadge(rowId, status);
+}
+
+function updateStatusBadge(rowId, status) {
+    let badgeClass = 'badge bg-secondary';
+    let badgeText = 'Unknown';
+    
+    if (status === 'Pending') {
+        badgeClass = 'badge bg-warning text-dark';
+        badgeText = 'Pending';
+    } else if (status === 'InProgress') {
+        badgeClass = 'badge bg-info text-dark';
+        badgeText = 'In Progress';
+    } else if (status === 'Solved') {
+        badgeClass = 'badge bg-success';
+        badgeText = 'Solved';
+    }
+    
+    const statusElement = document.getElementById('status-' + rowId);
+    if (statusElement) {
+        statusElement.innerHTML = `<span class="${badgeClass}">${badgeText}</span>`;
+    }
+}
+
+function showMessage(message, type) {
+    // Remove existing alerts
+    const existingAlerts = document.querySelectorAll('.alert');
+    existingAlerts.forEach(alert => alert.remove());
+    
+    // Create new alert
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Insert after the h2
+    const h2 = document.querySelector('h2');
+    if (h2 && h2.parentNode) {
+        h2.parentNode.insertBefore(alertDiv, h2.nextSibling);
+    }
+}
+
+// Add keyboard support
 document.addEventListener('DOMContentLoaded', function() {
-    const mediaModal = document.getElementById('mediaModal');
-    const mediaContainer = document.getElementById('mediaContainer');
-    const contextPath = '<%= request.getContextPath() %>';
-
-    // Listen for modal show
-    mediaModal.addEventListener('show.bs.modal', function (event) {
-        const triggerImg = event.relatedTarget; // The clicked image
-        if (!triggerImg) return;
-
-        const complaintId = triggerImg.getAttribute('data-complaint');
-
-        mediaContainer.innerHTML = "<p class='text-muted'>Loading images...</p>";
-
-        fetch(contextPath + '/GetComplaintImagesServlet?complaintId=' + complaintId)
-            .then(response => response.text())
-            .then(html => {
-                mediaContainer.innerHTML = html;
-            })
-            .catch(err => {
-                console.error('Image load error:', err);
-                mediaContainer.innerHTML = "<p class='text-danger'>Failed to load images.</p>";
-            });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && editingRowId) {
+            cancelEdit(editingRowId);
+        }
     });
 });
 </script>
-
-
-<script>
-function exportPageToPDF() {
-    const { jsPDF } = window.jspdf;
-    const element = document.body; // Or a specific container e.g. document.querySelector('.container-fluid')
-    const doc = new jsPDF('p', 'pt', 'a4'); // portrait, A3 page
-
-    html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-
-        const pdfWidth = doc.internal.pageSize.getWidth();
-        const pdfHeight = doc.internal.pageSize.getHeight();
-
-        const imgProps = doc.getImageProperties(imgData);
-        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-        let heightLeft = imgHeight;
-        let position = 0;
-
-        // Add first page
-        doc.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-        heightLeft -= pdfHeight;
-
-        // Add remaining pages
-        while (heightLeft > 0) {
-            position = heightLeft - imgHeight;
-            doc.addPage();
-            doc.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-            heightLeft -= pdfHeight;
-        }
-
-        // ✅ Add timestamp to filename
-        doc.save(`Complaint_Report.pdf`);
-    });
-}
-</script>
-
-
-
-
 
 <!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">

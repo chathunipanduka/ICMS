@@ -158,9 +158,16 @@ h2 {
         <!-- --- FILTERS ADDED: end --- -->
         
         <form method="post" action="${pageContext.request.contextPath}/ComplaintReportServlet">
-  <!-- your filter inputs (department, status, etc.) here -->
+  <!-- Include all your filter inputs (hidden) to maintain filters in export -->
+  <input type="hidden" name="department" value="<%= deptName %>">
+  <input type="hidden" name="status" value="<%= request.getParameter("status") != null ? request.getParameter("status") : "" %>">
+  <input type="hidden" name="location" value="<%= request.getParameter("location") != null ? request.getParameter("location") : "" %>">
+  <input type="hidden" name="fromDate" value="<%= request.getParameter("fromDate") != null ? request.getParameter("fromDate") : "" %>">
+  <input type="hidden" name="toDate" value="<%= request.getParameter("toDate") != null ? request.getParameter("toDate") : "" %>">
+  <input type="hidden" name="search" value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>">
   
-  <button type="button" class="btn btn-danger" onclick="exportPageToPDF()">Export PDF</button>
+  <button type="submit" name="exportType" value="excel" class="btn btn-success">Export Excel</button>
+  <button type="submit" name="exportType" value="pdf" class="btn btn-danger">Export PDF</button>
 </form>
 <br>
        
