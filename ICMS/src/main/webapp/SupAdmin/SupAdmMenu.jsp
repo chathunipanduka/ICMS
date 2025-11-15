@@ -72,7 +72,6 @@ body {
             <a href="DepartmentManage.jsp" target="rightFrame"><i class="fa fa-building"></i>&nbsp;&nbsp;Department</a>
             <a href="UserManage.jsp" target="rightFrame"><i class="fa fa-user"></i>&nbsp;&nbsp;User</a>
             <a href="DeptComplaints.jsp" target="rightFrame"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Complaints</a>
-            <a href="SupAdmReports.jsp" target="rightFrame"><i class="fa fa-chart-bar"></i>&nbsp;&nbsp;Reports</a>
             <a href="ViewLogs.jsp" target="rightFrame"><i class="fa fa-file-alt"></i>&nbsp;&nbsp;Logs</a>
         </nav>
     </div>

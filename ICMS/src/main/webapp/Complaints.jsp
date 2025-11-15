@@ -145,6 +145,7 @@ th {
 						<th>Media</th>
 						<th>Date/Time</th>
 						<th>Rating</th> <!-- ⭐ Added -->
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>

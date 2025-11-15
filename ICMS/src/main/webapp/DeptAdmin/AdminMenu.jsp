@@ -63,7 +63,6 @@ body {
       
         <a class="active" href="AdmHome.jsp" target="rightFrame"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</a>
         <a href="AdmComplaints.jsp" target="rightFrame"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Complaints</a>
-        <a href="AdmReports.jsp" target="rightFrame"><i class="fa fa-chart-bar"></i>&nbsp;&nbsp;Reports</a>
         <a href="AdmNotification.jsp" target="rightFrame"><i class="fa fa-bell"></i>&nbsp;&nbsp;Notification</a><br><br><br><br><br><br><br><br>
       </nav>
       </div>
