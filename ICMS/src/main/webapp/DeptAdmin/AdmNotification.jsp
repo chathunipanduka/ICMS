@@ -42,7 +42,7 @@ try (Connection con = IcmsConnection.getConnection()) {
 %>
 
 <div class="container mt-4">
-    <h2>Notifications</h2>
+    <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">Notifications</h2>
 
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle text-center">

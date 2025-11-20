@@ -11,6 +11,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Optionally add Bootstrap for spinner -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -25,11 +26,7 @@ body {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
-h2 {
-  color: #003366;
-  margin-bottom: 25px;
-  text-align: center;
-}
+
 .table thead th {
   background-color: #003366;
   color: white;
@@ -76,6 +73,76 @@ h2 {
     padding: 10px;
   }
 }
+
+/* Report Modal Styles */
+.complaint-report {
+    font-size: 14px;
+}
+.complaint-report .card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+.complaint-report .card-header {
+    font-weight: 600;
+    border-bottom: 1px solid #dee2e6;
+}
+.complaint-report p {
+    margin-bottom: 8px;
+}
+
+/* Print Styles */
+@media print {
+    .btn, .no-print {
+        display: none !important;
+    }
+    .complaint-report {
+        font-size: 12px !important;
+    }
+}
+
+
+/* Report Image Styles */
+.report-image {
+    max-width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: transform 0.2s;
+}
+
+.report-image:hover {
+    transform: scale(1.05);
+}
+
+/* PDF Export Styles */
+@media print {
+    .report-image {
+        max-width: 150px !important;
+        height: auto !important;
+        page-break-inside: avoid;
+    }
+    .img-thumbnail {
+        border: 1px solid #000 !important;
+    }
+}
+
+/* Loading animation for images */
+.image-loading {
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+}
+
+.image-loading::after {
+    content: "Loading image...";
+    color: #6c757d;
+    font-size: 12px;
+}
+
+
 </style>
 </head>
 
@@ -100,7 +167,7 @@ h2 {
   <div class="row justify-content-center">
     <div class="col-12 col-md-11">
       <div class="card shadow rounded-3 p-4">
-        <h2>📋 All Submitted Complaints</h2>
+        <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">All Complaints</h2>
 
         <!-- --- FILTERS ADDED: start --- -->
         <form method="post" class="row g-2 mb-4">
@@ -213,7 +280,7 @@ h2 {
         "d.deptName, l.uName AS username " +
         "FROM complaint_tb c " +
         "LEFT JOIN dept_tb d ON c.dept_id = d.id_dept_tb " +
-        "LEFT JOIN login_tb l ON c.user_id = l.id_login_tb " +
+        "LEFT JOIN user_tb l ON c.user_id = l.id_login_tb " +
         "WHERE d.deptName = ? "
       );
 
@@ -316,7 +383,17 @@ h2 {
   <td><%= location != null ? location : "N/A" %></td>
   <td><%= dateTime %></td>
   <td><%= updatedTime != null ? updatedTime : "-" %></td>
-  <td><button type="submit" class="btn btn-sm btn-primary mt-1">Update</button></form></td>
+  <td><form><button type="submit" class="btn btn-sm btn-primary mt-1">Update</button></form>
+  
+  <!-- View Report Button -->
+  <button class="btn btn-sm btn-info w-100" 
+          data-bs-toggle="modal" 
+          data-bs-target="#reportModal"
+          data-complaint-id="<%= id %>"
+          onclick="loadComplaintReport(<%= id %>)">
+    Report
+  </button>
+  </td>
 </tr>
 <%
       }
@@ -376,6 +453,34 @@ function showLoading() {
     </div>
   </div>
 </div>
+
+<!-- 📊 Individual Complaint Report Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="reportModalLabel">Complaint Report - #<span id="reportComplaintId"></span></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="reportContainer">
+        <div class="text-center">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p>Loading report...</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" onclick="exportIndividualReport()">
+          <i class="bi bi-download"></i> Export PDF
+        </button>
+        <button type="button" class="btn btn-warning" onclick="printReport()">
+          <i class="bi bi-printer"></i> Print
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Bootstrap JS (with Popper) -->
 <!-- Bootstrap JS Bundle (includes Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -407,6 +512,425 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 });
+
+
+
+function loadComplaintReport(complaintId) {
+    document.getElementById('reportComplaintId').textContent = complaintId;
+    const reportContainer = document.getElementById('reportContainer');
+    
+    // Show loading spinner
+    reportContainer.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Loading report with images...</p>
+        </div>
+    `;
+    
+    fetch('${pageContext.request.contextPath}/GetComplaintReportServlet?complaintId=' + complaintId)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(html => {
+            reportContainer.innerHTML = html;
+            // Preload images for PDF export
+            preloadImages(reportContainer);
+        })
+        .catch(err => {
+            console.error('Report load error:', err);
+            reportContainer.innerHTML = `
+                <div class="alert alert-danger text-center">
+                    <i class="bi bi-exclamation-triangle"></i> Failed to load report. Please try again.
+                    <br><small>Error: ${err.message}</small>
+                </div>
+            `;
+        });
+}
+
+// Preload images to ensure they're available for PDF export
+function preloadImages(container) {
+    const images = container.getElementsByTagName('img');
+    let loadedCount = 0;
+    const totalImages = images.length;
+    
+    if (totalImages === 0) return;
+    
+    Array.from(images).forEach(img => {
+        const originalSrc = img.src;
+        const newImg = new Image();
+        newImg.onload = function() {
+            loadedCount++;
+            console.log(`Loaded image ${loadedCount}/${totalImages}`);
+            img.src = originalSrc; // Ensure original image is loaded
+        };
+        newImg.onerror = function() {
+            loadedCount++;
+            console.log(`Failed to load image ${loadedCount}/${totalImages}`);
+            img.alt = 'Failed to load image';
+        };
+        newImg.src = originalSrc + '&t=' + new Date().getTime(); // Cache busting
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const mediaModal = document.getElementById('mediaModal');
+    const mediaContainer = document.getElementById('mediaContainer');
+    const contextPath = '<%= request.getContextPath() %>';
+
+    // Listen for modal show
+    mediaModal.addEventListener('show.bs.modal', function (event) {
+        const triggerImg = event.relatedTarget;
+        if (!triggerImg) return;
+
+        const complaintId = triggerImg.getAttribute('data-complaint');
+
+        mediaContainer.innerHTML = "<p class='text-muted'>Loading images...</p>";
+
+        fetch(contextPath + '/GetComplaintImagesServlet?complaintId=' + complaintId)
+            .then(response => response.text())
+            .then(html => {
+                mediaContainer.innerHTML = html;
+            })
+            .catch(err => {
+                console.error('Image load error:', err);
+                mediaContainer.innerHTML = "<p class='text-danger'>Failed to load images.</p>";
+            });
+    });
+});
+
+// Load individual complaint report
+function loadComplaintReport(complaintId) {
+    document.getElementById('reportComplaintId').textContent = complaintId;
+    const reportContainer = document.getElementById('reportContainer');
+    
+    // Show loading spinner
+    reportContainer.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Loading report with images...</p>
+        </div>
+    `;
+    
+    // Use proper string concatenation instead of template literals with EL
+    var url = '<%= request.getContextPath() %>' + '/GetComplaintReportServlet?complaintId=' + complaintId;
+    
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(html => {
+            reportContainer.innerHTML = html;
+            // Preload images for PDF export
+            preloadImages(reportContainer);
+        })
+        .catch(err => {
+            console.error('Report load error:', err);
+            reportContainer.innerHTML = `
+                <div class="alert alert-danger text-center">
+                    <i class="bi bi-exclamation-triangle"></i> Failed to load report. Please try again.
+                    <br><small>Error: ${err.message}</small>
+                </div>
+            `;
+        });
+}
+
+// Preload images to ensure they're available for PDF export
+function preloadImages(container) {
+    const images = container.getElementsByTagName('img');
+    let loadedCount = 0;
+    const totalImages = images.length;
+    
+    if (totalImages === 0) return;
+    
+    Array.from(images).forEach(img => {
+        const originalSrc = img.src;
+        const newImg = new Image();
+        newImg.onload = function() {
+            loadedCount++;
+            console.log('Loaded image ' + loadedCount + '/' + totalImages);
+            img.src = originalSrc; // Ensure original image is loaded
+        };
+        newImg.onerror = function() {
+            loadedCount++;
+            console.log('Failed to load image ' + loadedCount + '/' + totalImages);
+            img.alt = 'Failed to load image';
+        };
+        // Use proper string concatenation
+        newImg.src = originalSrc + '&t=' + Date.now(); // Cache busting with Date.now()
+    });
+}
+
+// Export individual report as PDF with images
+function exportIndividualReport() {
+    const complaintId = document.getElementById('reportComplaintId').textContent;
+    const reportContainer = document.getElementById('reportContainer');
+    
+    // Check if report content is loaded
+    if (!reportContainer.innerHTML || reportContainer.innerHTML.includes('spinner-border')) {
+        alert('Please wait for the report to load completely before exporting.');
+        return;
+    }
+    
+    // Check if images are loaded
+    const images = reportContainer.getElementsByTagName('img');
+    let allImagesLoaded = true;
+    
+    Array.from(images).forEach(img => {
+        if (!img.complete || img.naturalHeight === 0) {
+            allImagesLoaded = false;
+        }
+    });
+    
+    if (!allImagesLoaded) {
+        if (!confirm('Some images are still loading. Exporting now may result in missing images. Continue anyway?')) {
+            return;
+        }
+    }
+    
+    // Show export loading
+    const originalHTML = reportContainer.innerHTML;
+    reportContainer.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-success" role="status"></div>
+            <p class="mt-2">Generating PDF with images... This may take a moment.</p>
+        </div>
+    `;
+    
+    // Restore content for capture
+    setTimeout(() => {
+        reportContainer.innerHTML = originalHTML;
+        
+        // Give extra time for images to render
+        setTimeout(() => {
+            generatePDFWithImages(complaintId, reportContainer);
+        }, 1000);
+    }, 500);
+}
+
+// Generate PDF with images
+function generatePDFWithImages(complaintId, reportContainer) {
+    const { jsPDF } = window.jspdf;
+    
+    const options = {
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        backgroundColor: '#ffffff',
+        onclone: function(clonedDoc) {
+            // Ensure all styles are preserved in the clone
+            const images = clonedDoc.getElementsByTagName('img');
+            Array.from(images).forEach(img => {
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+            });
+        }
+    };
+    
+    html2canvas(reportContainer, options).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = doc.internal.pageSize.getHeight();
+        
+        // Calculate image dimensions to fit page
+        const imgWidth = pdfWidth - 20; // 10mm margins on each side
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Add header
+        doc.setFillColor(0, 51, 102);
+        doc.rect(0, 0, pdfWidth, 20, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(16);
+        doc.setFont(undefined, 'bold');
+        doc.text('Complaint Report - #' + complaintId, pdfWidth / 2, 12, { align: 'center' });
+        
+        // Add content
+        doc.setTextColor(0, 0, 0);
+        
+        let heightLeft = imgHeight;
+        let position = 25; // Start below header
+        let pageHeight = pdfHeight - 30; // Account for header and footer
+        
+        // Add first page
+        doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        
+        // Add remaining pages if content is too long
+        while (heightLeft > 0) {
+            doc.addPage();
+            position = -pageHeight + heightLeft;
+            doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+        
+        // Add footer with page numbers to all pages
+        const totalPages = doc.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Page ' + i + ' of ' + totalPages, pdfWidth / 2, pdfHeight - 10, { align: 'center' });
+            doc.text('Generated on: ' + new Date().toLocaleString(), 10, pdfHeight - 10);
+        }
+        
+        // Save the PDF - use string concatenation instead of template literals
+        doc.save('Complaint_Report_' + complaintId + '_' + Date.now() + '.pdf');
+        
+    }).catch(err => {
+        console.error('PDF generation error:', err);
+        alert('Error generating PDF: ' + err.message);
+        
+        // Fallback: export without images
+        if (confirm('PDF generation failed. Would you like to export as text instead?')) {
+            exportAsText(complaintId, reportContainer);
+        }
+    });
+}
+
+// Fallback text export
+function exportAsText(complaintId, reportContainer) {
+    const content = reportContainer.innerText;
+    const blob = new Blob(['COMPLAINT REPORT #' + complaintId + '\n\n' + content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'complaint_' + complaintId + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Print individual report with images
+function printReport() {
+    const complaintId = document.getElementById('reportComplaintId').textContent;
+    const reportContainer = document.getElementById('reportContainer');
+    
+    if (!reportContainer.innerHTML || reportContainer.innerHTML.includes('spinner-border')) {
+        alert('Please wait for the report to load completely before printing.');
+        return;
+    }
+    
+    // Use proper string concatenation
+    var printContent = '<!DOCTYPE html>' +
+        '<html>' +
+        '<head>' +
+        '<title>Complaint Report - #' + complaintId + '</title>' +
+        '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">' +
+        '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">' +
+        '<style>' +
+        'body { padding: 20px; font-family: Arial, sans-serif; }' +
+        '.complaint-report { font-size: 14px; }' +
+        '.card { border: 1px solid #ddd; margin-bottom: 15px; }' +
+        '.card-header { background-color: #f8f9fa !important; font-weight: bold; }' +
+        '.report-image { max-width: 200px; height: auto; margin: 5px; }' +
+        '.report-header { text-align: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #003366; }' +
+        '@media print { ' +
+        '.no-print { display: none !important; }' +
+        '.btn { display: none !important; }' +
+        'body { padding: 0; margin: 0; }' +
+        '.card { border: 1px solid #000 !important; page-break-inside: avoid; }' +
+        '.report-image { max-width: 150px !important; }' +
+        '.row { display: flex; flex-wrap: wrap; }' +
+        '}' +
+        '@page { margin: 1cm; }' +
+        '</style>' +
+        '</head>' +
+        '<body>' +
+        '<div class="report-header">' +
+        '<h2>Biyagama Pradeshiya Sabha</h2>' +
+        '<h3>Complaint Report - #' + complaintId + '</h3>' +
+        '<p>Generated on: ' + new Date().toLocaleString() + '</p>' +
+        '</div>' +
+        '<div class="complaint-report">' +
+        reportContainer.innerHTML +
+        '</div>' +
+        '</body>' +
+        '</html>';
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    
+    // Wait for images to load before printing
+    printWindow.onload = function() {
+        const images = printWindow.document.images;
+        let loadedCount = 0;
+        const totalImages = images.length;
+        
+        if (totalImages === 0) {
+            printWindow.print();
+            return;
+        }
+        
+        Array.from(images).forEach(img => {
+            img.onload = function() {
+                loadedCount++;
+                if (loadedCount === totalImages) {
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 500);
+                }
+            };
+            img.onerror = function() {
+                loadedCount++;
+                if (loadedCount === totalImages) {
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 500);
+                }
+            };
+        });
+        
+        // Fallback: print after 5 seconds even if some images fail
+        setTimeout(() => {
+            printWindow.print();
+        }, 5000);
+    };
+}
+
+// Simple page export function (if you have this)
+function exportPageToPDF() {
+    const { jsPDF } = window.jspdf;
+    const element = document.body;
+    const doc = new jsPDF('p', 'pt', 'a4');
+
+    html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = doc.internal.pageSize.getHeight();
+
+        const imgProps = doc.getImageProperties(imgData);
+        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        // Add first page
+        doc.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        // Add remaining pages
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+            heightLeft -= pdfHeight;
+        }
+
+        // Use string concatenation instead of template literal
+        doc.save('Complaint_Report_' + Date.now() + '.pdf');
+    });
+}
+
+
 </script>
 
 <script>

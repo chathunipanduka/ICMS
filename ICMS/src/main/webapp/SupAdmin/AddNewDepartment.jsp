@@ -8,7 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<a href="DepartmentManage.jsp" class="btn btn-secondary mt-3 ms-3">← Back</a>
+<!-- <a href="DepartmentManage.jsp" class="btn btn-secondary mt-3 ms-3">← Back</a>-->
 
 <div class="container mt-5">
 

@@ -20,7 +20,7 @@ if (username == null) {
 %>
 
 <div class="container mt-4">
-    <h2>Notifications</h2>
+    <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">Notification</h2>
 
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle text-center">
@@ -44,7 +44,7 @@ try {
     // Select notifications for the logged-in user, newest first
     String sql = "SELECT id_notification_tb, complaint_id, message, is_read, create_at "
                + "FROM notification_tb "
-               + "WHERE user_id = (SELECT id_login_tb FROM login_tb WHERE uName = ?) and type='status_update' "
+               + "WHERE user_id = (SELECT id_login_tb FROM user_tb WHERE uName = ?) and type='status_update' "
                + "ORDER BY create_at DESC";
 
     ps = conn.prepareStatement(sql);

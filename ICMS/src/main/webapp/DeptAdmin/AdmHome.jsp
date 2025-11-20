@@ -133,7 +133,7 @@ footer {
 
 <!-- ✅ Department Badge Section -->
 <div class="container mt-4 text-center">
-  <h2 class="text-primary mb-2"><%= deptName %> Department</h2>
+  <h2 class="text-center mb-5 fw-bold" style="color: #00274d;"><%= deptName %> Department</h2>
   <p class="text-secondary mb-1">Average Rating: <%= String.format("%.2f", avgRating) %></p>
   <div class="d-flex justify-content-center align-items-center flex-column">
     <img src="<%= badgeImage %>" alt="<%= badge %> Badge" class="img-fluid" style="width:500px; height:auto;">
@@ -145,7 +145,7 @@ footer {
 
 
 <div class="container mt-4">
-  <h2 class="text-center text-primary mb-4">Complaints Overview</h2>
+  <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">Complaints Overview</h2>
 
   <div class="row g-4 justify-content-center">
     <div class="col-10 col-sm-6 col-md-4">
@@ -181,7 +181,7 @@ footer {
 <hr class="my-4">
 
 <div class="container mt-5">
-  <h3 class="text-center text-primary mb-4">Complaints Summary</h3>
+  <h3 class="text-center mb-5 fw-bold" style="color: #00274d;">Complaints Summary</h3>
 
   <div class="row justify-content-center gy-5">
     <div class="col-12 col-md-6 text-center">

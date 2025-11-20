@@ -9,7 +9,7 @@
 </head>
 <body class="bg-light">
 
-<a href="DepartmentManage.jsp" class="btn btn-secondary mt-3 ms-3">← Back</a>
+<!-- <a href="DepartmentManage.jsp" class="btn btn-secondary mt-3 ms-3">← Back</a>-->
 
 <div class="container mt-5">
   <div class="card shadow p-4">
