@@ -25,7 +25,7 @@ public class UpdateProfileServlet extends HttpServlet {
         String contact = request.getParameter("contact");
 
         try (Connection conn = IcmsConnection.getConnection()) {
-            String sql = "UPDATE login_tb SET email = ?, contactNo = ? WHERE uName = ?";
+            String sql = "UPDATE user_tb SET email = ?, contactNo = ? WHERE uName = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, contact);

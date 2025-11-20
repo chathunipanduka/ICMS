@@ -25,7 +25,7 @@ public class BlockUserServlet extends HttpServlet {
 
         try (Connection conn = IcmsConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(
-                 "UPDATE login_tb SET isBlocked = ? WHERE id_login_tb = ?")) {
+                 "UPDATE user_tb SET isBlocked = ? WHERE id_login_tb = ?")) {
             ps.setInt(1, status);
             ps.setInt(2, id);
             ps.executeUpdate();

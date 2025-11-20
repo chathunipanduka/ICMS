@@ -40,7 +40,7 @@ public class RegisterServlet extends HttpServlet {
             }
 
             // ✅ Check if username already exists
-            String checkSql = "SELECT uName FROM login_tb WHERE uName=? OR email=?";
+            String checkSql = "SELECT uName FROM user_tb WHERE uName=? OR email=?";
             try (PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
                 checkPs.setString(1, uName);
                 checkPs.setString(2, email);
@@ -57,7 +57,7 @@ public class RegisterServlet extends HttpServlet {
             String hashedPassword = PasswordUtil.hashPassword(pwd);
 
             // ✅ Insert new user
-            String sql = "INSERT INTO login_tb (firstname, lastname, uname, email, contactNo, pwd, isBlocked) VALUES (?, ?, ?, ?, ?, ?, 0)";
+            String sql = "INSERT INTO user_tb (firstname, lastname, uname, email, contactNo, pwd, isBlocked) VALUES (?, ?, ?, ?, ?, ?, 0)";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, fName);
                 ps.setString(2, lName);
@@ -74,7 +74,7 @@ public class RegisterServlet extends HttpServlet {
                     LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
 
                     // ✅ Store OTP in DB
-                    String updateOtp = "UPDATE login_tb SET otp_code=?, otp_expiry=? WHERE uName=?";
+                    String updateOtp = "UPDATE user_tb SET otp_code=?, otp_expiry=? WHERE uName=?";
                     try (PreparedStatement ps1 = conn.prepareStatement(updateOtp)) {
                         ps1.setString(1, String.valueOf(otp));
                         ps1.setString(2, expiry.toString());

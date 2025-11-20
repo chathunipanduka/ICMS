@@ -18,7 +18,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         String email = request.getParameter("email");
 
         try (Connection conn = IcmsConnection.getConnection()) {
-            String sql = "SELECT uName FROM login_tb WHERE email=?";
+            String sql = "SELECT uName FROM user_tb WHERE email=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
@@ -29,7 +29,7 @@ public class ForgotPasswordServlet extends HttpServlet {
                 LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
 
                 // Store OTP in DB
-                String updateOtp = "UPDATE login_tb SET otp_code=?, otp_expiry=? WHERE email=?";
+                String updateOtp = "UPDATE user_tb SET otp_code=?, otp_expiry=? WHERE email=?";
                 PreparedStatement ps2 = conn.prepareStatement(updateOtp);
                 ps2.setInt(1, otp);
                 ps2.setTimestamp(2, Timestamp.valueOf(expiry));

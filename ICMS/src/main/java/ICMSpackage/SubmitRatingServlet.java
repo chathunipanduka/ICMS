@@ -25,7 +25,7 @@ public class SubmitRatingServlet extends HttpServlet {
             
          // 1️⃣ Get user_id and email
             
-            String userSql = "SELECT id_login_tb, email FROM login_tb WHERE uName = ?";
+            String userSql = "SELECT id_login_tb, email FROM user_tb WHERE uName = ?";
             try (PreparedStatement psUser = con.prepareStatement(userSql)) {
                 psUser.setString(1, username);
                 try (ResultSet rs = psUser.executeQuery()) {

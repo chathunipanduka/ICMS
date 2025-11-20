@@ -257,7 +257,7 @@ public class SupAdmComplaintReportServlet extends HttpServlet {
                 "d.deptName, l.uName AS username " +
                 "FROM complaint_tb c " +
                 "LEFT JOIN dept_tb d ON c.dept_id = d.id_dept_tb " +
-                "LEFT JOIN login_tb l ON c.user_id = l.id_login_tb " +
+                "LEFT JOIN user_tb l ON c.user_id = l.id_login_tb " +
                 "WHERE 1=1 "
             );
 

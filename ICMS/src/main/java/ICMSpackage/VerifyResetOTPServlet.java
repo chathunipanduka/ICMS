@@ -19,7 +19,7 @@ public class VerifyResetOTPServlet extends HttpServlet {
         String email = (String) request.getSession().getAttribute("resetEmail");
 
         try (Connection conn = IcmsConnection.getConnection()) {
-            String sql = "SELECT otp_code, otp_expiry FROM login_tb WHERE email=?";
+            String sql = "SELECT otp_code, otp_expiry FROM user_tb WHERE email=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();

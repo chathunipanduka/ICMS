@@ -32,7 +32,7 @@ public class ResetPasswordServlet extends HttpServlet {
         try (Connection conn = IcmsConnection.getConnection()) {
 
             // 1️⃣ Update the password
-            String sql = "UPDATE login_tb SET pwd=?, otp_code=NULL, otp_expiry=NULL WHERE email=?";
+            String sql = "UPDATE user_tb SET pwd=?, otp_code=NULL, otp_expiry=NULL WHERE email=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, newPwd); // ⚠️ Hash this in production
             ps.setString(2, email);
@@ -40,7 +40,7 @@ public class ResetPasswordServlet extends HttpServlet {
 
             if (updatedRows > 0) {
                 // 2️⃣ Get user ID and username for logging
-                String sql2 = "SELECT id_login_tb, uName FROM login_tb WHERE email=?";
+                String sql2 = "SELECT id_login_tb, uName FROM user_tb WHERE email=?";
                 PreparedStatement ps2 = conn.prepareStatement(sql2);
                 ps2.setString(1, email);
                 ResultSet rs2 = ps2.executeQuery();

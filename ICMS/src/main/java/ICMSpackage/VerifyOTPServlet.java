@@ -19,7 +19,7 @@ public class VerifyOTPServlet extends HttpServlet {
         String username = (String) request.getSession().getAttribute("username");
 
         try (Connection conn = IcmsConnection.getConnection()) {
-            String sql = "SELECT id_login_tb, otp_code, otp_expiry FROM login_tb WHERE uName=?";
+            String sql = "SELECT id_login_tb, otp_code, otp_expiry FROM user_tb WHERE uName=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
@@ -33,7 +33,7 @@ public class VerifyOTPServlet extends HttpServlet {
                     dbOtp.equals(enteredOtp) && LocalDateTime.now().isBefore(expiry)) {
 
                     // OTP valid — clear OTP fields
-                    String clearOtp = "UPDATE login_tb SET otp_code=NULL, otp_expiry=NULL WHERE uName=?";
+                    String clearOtp = "UPDATE user_tb SET otp_code=NULL, otp_expiry=NULL WHERE uName=?";
                     PreparedStatement ps2 = conn.prepareStatement(clearOtp);
                     ps2.setString(1, username);
                     ps2.executeUpdate();

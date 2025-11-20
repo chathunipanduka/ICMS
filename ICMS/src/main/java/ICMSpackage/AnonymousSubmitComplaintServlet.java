@@ -32,7 +32,7 @@ public class AnonymousSubmitComplaintServlet extends HttpServlet {
             // 1️⃣ Get Anonymous user ID
             int userId = 0;
             try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT id_login_tb FROM login_tb WHERE uName = ?")) {
+                    "SELECT id_login_tb FROM user_tb WHERE uName = ?")) {
                 ps.setString(1, "Anonymous");
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {

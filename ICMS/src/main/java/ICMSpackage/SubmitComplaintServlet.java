@@ -40,7 +40,7 @@ public class SubmitComplaintServlet extends HttpServlet {
             // 1️⃣ Get user_id and email
             int userId = 0;
             String userEmail = null;
-            String userSql = "SELECT id_login_tb, email FROM login_tb WHERE uName = ?";
+            String userSql = "SELECT id_login_tb, email FROM user_tb WHERE uName = ?";
             try (PreparedStatement psUser = conn.prepareStatement(userSql)) {
                 psUser.setString(1, username);
                 try (ResultSet rs = psUser.executeQuery()) {

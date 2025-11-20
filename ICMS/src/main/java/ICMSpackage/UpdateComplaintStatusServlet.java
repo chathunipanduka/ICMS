@@ -37,7 +37,7 @@ public class UpdateComplaintStatusServlet extends HttpServlet {
             String userSql = """
                 SELECT l.email, l.id_login_tb, c.description
                 FROM complaint_tb c
-                JOIN login_tb l ON c.user_id = l.id_login_tb
+                JOIN user_tb l ON c.user_id = l.id_login_tb
                 WHERE c.id_complaint_tb = ?
             """;
 

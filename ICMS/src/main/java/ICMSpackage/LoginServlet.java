@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         try (Connection conn = IcmsConnection.getConnection()) {
 
             // --- Check normal user ---
-            String sql = "SELECT id_login_tb, uName, pwd, isBlocked FROM login_tb WHERE (uName=? OR email=?)";
+            String sql = "SELECT id_login_tb, uName, pwd, isBlocked FROM user_tb WHERE (uName=? OR email=?)";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, username);
                 ps.setString(2, username);
