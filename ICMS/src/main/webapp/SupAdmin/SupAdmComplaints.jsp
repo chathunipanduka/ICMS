@@ -36,14 +36,7 @@ body {
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Title */
-h2 {
-	color: #003366;
-	margin-bottom: 25px;
-	text-align: center;
-	font-size: 1.8rem;
-	font-weight: 600;
-}
+
 
 /* Table Styling */
 .table {
@@ -163,7 +156,7 @@ footer {
 <body>
 
 <div class="container">
-	<h2>📋 All Submitted Complaints</h2>
+	<h2 class="text-center mb-5 fw-bold" style="color: #00274d;">All Complaints</h2>
 
 	<div class="table-responsive">
 		<table class="table table-bordered table-hover align-middle text-center">

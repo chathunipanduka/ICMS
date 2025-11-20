@@ -107,7 +107,7 @@ footer {
 
 <!-- ======== Complaint Overview Cards ======== -->
 <div class="container mt-5">
-  <h2 class="text-center text-primary mb-4">Complaints Overview</h2>
+  <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">Complaints Overview</h2>
 
   <div class="row g-4 justify-content-center">
     <%
@@ -116,7 +116,7 @@ footer {
       try (Connection con = IcmsConnection.getConnection()) {
           String sql = "SELECT status, COUNT(*) AS count " +
                        "FROM complaint_tb " +
-                       "WHERE user_id = (SELECT id_login_tb FROM login_tb WHERE uName = ?) " +
+                       "WHERE user_id = (SELECT id_login_tb FROM user_tb WHERE uName = ?) " +
                        "GROUP BY status";
 
           PreparedStatement ps = con.prepareStatement(sql);
@@ -173,7 +173,7 @@ footer {
 
 <!-- ======== Charts Section ======== -->
 <div class="container mb-5">
-  <h3 class="text-center text-primary mb-4">Complaints Summary</h3>
+  <h3 class="text-center mb-5 fw-bold" style="color: #00274d;">Complaints Summary</h3>
 
   <div class="row justify-content-center align-items-center gy-5">
     <!-- Pie Chart -->

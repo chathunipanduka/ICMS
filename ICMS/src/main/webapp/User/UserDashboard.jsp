@@ -294,7 +294,7 @@ body {
 
     try {
         Connection conn = IcmsConnection.getConnection();
-        String sql = "SELECT firstName, lastName, email, contactNo, uName FROM login_tb WHERE uName = ?";
+        String sql = "SELECT firstName, lastName, email, contactNo, uName FROM user_tb WHERE uName = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, username);
         ResultSet rs = ps.executeQuery();

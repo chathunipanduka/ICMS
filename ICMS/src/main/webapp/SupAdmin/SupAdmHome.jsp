@@ -30,7 +30,7 @@
 
 <div class="container mt-5">
 
-    <h2 class="text-center mb-5 fw-bold text-primary">Super Admin Dashboard Overview</h2>
+    <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">Super Admin Dashboard Overview</h2>
 
     <%
         Connection con = null;
@@ -126,7 +126,7 @@
                     <p class="status-count text-info">In Progress: <%= inProgress %></p>
                     <p class="status-count text-success">Solved: <%= solved %></p>
                     <p class="status-count text-secondary">Total: <%= total %></p>
-                    <a href="ViewDeptComplaints.jsp?deptId=<%= deptId %>" class="btn btn-primary mt-3">View Complaints</a>
+                    <!--  <a href="ViewDeptComplaints.jsp?deptId=<%= deptId %>" class="btn btn-primary mt-3">View Complaints</a>-->
                 </div>
             </div>
         </div>

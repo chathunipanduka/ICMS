@@ -5,11 +5,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- ✅ Important for responsiveness -->
-<title>All Complaints - Super Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All Users - Super Admin</title>
 
 <!-- Bootstrap 5 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
 <style>
 body {
@@ -34,21 +36,22 @@ th {
   background-color: #003366;
   color: #fff;
 }
-.media-preview {
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
-  object-fit: cover;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
+
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
-.media-preview:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+
+.btn-sm {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
 }
-.no-media {
-  color: #999;
-  font-size: 13px;
+
+.status-badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
 }
 
 /* Footer styling */
@@ -67,16 +70,9 @@ footer {
     margin-top: 20px;
     padding: 15px;
   }
-
   table {
     font-size: 14px;
   }
-
-  .media-preview {
-    width: 60px;
-    height: 60px;
-  }
-
   h2 {
     font-size: 20px;
   }
@@ -88,6 +84,10 @@ footer {
   }
   table th, table td {
     white-space: nowrap;
+  }
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -112,18 +112,45 @@ if (username == null) {
 %>
 
 <div class="container">
-  <h2 class="text-center mb-4">All Users</h2>
+  <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">Manage Users</h2>
   
   <form method="get" class="row g-2 mb-4">
-  <div class="col-md-3 mt-2">
-    <label class="form-label">Search</label>
-    <input type="text" name="search" class="form-control form-control-sm" placeholder="Keyword or ID"
-           value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>">
-  </div>
-  <div class="col-md-2 align-self-end">
-    <button type="submit" class="btn btn-primary btn-sm w-100">Search</button>
-  </div>
-</form>
+    <div class="col-md-3 mt-2">
+      <label class="form-label">Search</label>
+      <input type="text" name="search" class="form-control form-control-sm" placeholder="Keyword or ID"
+             value="<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>">
+    </div>
+    <div class="col-md-2 align-self-end">
+      <button type="submit" class="btn btn-primary btn-sm w-100">
+        <i class="bi bi-search"></i> Search
+      </button>
+    </div>
+  </form>
+
+  <!-- Success/Error Messages -->
+<%
+    String successMsg = (String) session.getAttribute("successMessage");
+    String errorMsg = (String) session.getAttribute("errorMessage");
+    
+    if (successMsg != null) {
+%>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill"></i> <%= successMsg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<%
+        session.removeAttribute("successMessage");
+    }
+    if (errorMsg != null) {
+%>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i> <%= errorMsg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<%
+        session.removeAttribute("errorMessage");
+    }
+%>
   <!-- ✅ Responsive table wrapper -->
   <div class="table-responsive">
     <table class="table table-bordered table-hover align-middle text-center">
@@ -133,9 +160,10 @@ if (username == null) {
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email</th>
-          <th>Conatact No</th>
+          <th>Contact No</th>
           <th>User Name</th>
-          <th>Action</th>
+          <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -150,7 +178,7 @@ try {
     
     StringBuilder sql = new StringBuilder(
         "SELECT id_login_tb, firstName, lastName, email, contactNo, uName, pwd, isBlocked " +
-        "FROM login_tb WHERE 1=1 "
+        "FROM user_tb WHERE 1=1 "
     );
     
     List<String> params = new ArrayList<>();
@@ -183,40 +211,63 @@ try {
         String email = rs.getString("email");
         String contact = rs.getString("contactNo");
         String user_name = rs.getString("uName");
-        String blockStatus = rs.getInt("isBlocked") == 1 ? "Blocked" : "Active";
+        int isBlocked = rs.getInt("isBlocked");
+        String blockStatus = isBlocked == 1 ? "Blocked" : "Active";
+        String statusBadgeClass = isBlocked == 1 ? "bg-danger" : "bg-success";
 %>
 <tr>
-  <td><%= id %></td>
-  <td><%= fName %></td>
-  <td><%= lName %></td>
-  <td><%= email %></td>
-  <td><%= contact %></td>
-  <td><%= user_name %></td>
-  
+  <td><strong><%= id %></strong></td>
+  <td><%= fName != null ? fName : "" %></td>
+  <td><%= lName != null ? lName : "" %></td>
+  <td><%= email != null ? email : "" %></td>
+  <td><%= contact != null ? contact : "" %></td>
+  <td><%= user_name != null ? user_name : "" %></td>
   <td>
-    <a href="EditUser.jsp?id=<%= id %>" class="btn btn-sm btn-warning mb-1">Edit</a>
-    <a href="<%= request.getContextPath() %>/DeleteUserServlet?id=<%= id %>"
-       class="btn btn-sm btn-danger mb-1"
-       onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-    
-    <% if (blockStatus.equals("Active")) { %>
-      <a href="<%= request.getContextPath() %>/BlockUserServlet?id=<%= id %>&action=block"
-         class="btn btn-sm btn-secondary"
-         onclick="return confirm('Block this user?');">Block</a>
-    <% } else { %>
-      <a href="<%= request.getContextPath() %>/BlockUserServlet?id=<%= id %>&action=unblock"
-         class="btn btn-sm btn-success"
-         onclick="return confirm('Unblock this user?');">Unblock</a>
-    <% } %>
+    <span class="badge <%= statusBadgeClass %> status-badge"><%= blockStatus %></span>
+  </td>
+  <td>
+    <div class="action-buttons">
+      <!-- Edit Button -->
+      <a href="EditUser.jsp?id=<%= id %>" 
+         class="btn btn-warning btn-sm" 
+         title="Edit User">
+        <i class="bi bi-pencil-square"></i> Edit
+      </a>
+      
+      <!-- Delete Button -->
+      <a href="<%= request.getContextPath() %>/DeleteUserServlet?id=<%= id %>"
+         class="btn btn-danger btn-sm"
+         onclick="return confirm('Are you sure you want to delete user: <%= fName %> <%= lName %>? This action cannot be undone.');"
+         title="Delete User">
+        <i class="bi bi-trash"></i> Delete
+      </a>
+      
+      <!-- Block/Unblock Button -->
+      <% if (isBlocked == 0) { %>
+        <a href="<%= request.getContextPath() %>/BlockUserServlet?id=<%= id %>&action=block"
+           class="btn btn-secondary btn-sm"
+           onclick="return confirm('Block user: <%= fName %> <%= lName %>?');"
+           title="Block User">
+          <i class="bi bi-lock"></i> Block
+        </a>
+      <% } else { %>
+        <a href="<%= request.getContextPath() %>/BlockUserServlet?id=<%= id %>&action=unblock"
+           class="btn btn-success btn-sm"
+           onclick="return confirm('Unblock user: <%= fName %> <%= lName %>?');"
+           title="Unblock User">
+          <i class="bi bi-unlock"></i> Unblock
+        </a>
+      <% } %>
+    </div>
   </td>
 </tr>
 <%
     }
     if (!hasData) {
-        out.println("<tr><td colspan='9' class='text-muted'>No complaints submitted yet.</td></tr>");
+        out.println("<tr><td colspan='8' class='text-muted py-3'>No users found.</td></tr>");
     }
 } catch (Exception e) {
-    out.println("<tr><td colspan='9' class='text-danger'>Error: " + e.getMessage() + "</td></tr>");
+    out.println("<tr><td colspan='8' class='text-danger py-3'>Error loading users: " + e.getMessage() + "</td></tr>");
     e.printStackTrace();
 } finally {
     try { if (rs != null) rs.close(); } catch (Exception ignored) {}
@@ -228,8 +279,10 @@ try {
     </table>
   </div>
 </div>
-<br>
-<br>
+
+
+
+
 
 <!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
@@ -267,5 +320,21 @@ try {
     </div>
   </div>
 </footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Auto-dismiss alerts after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+        setTimeout(function() {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }, 5000);
+    });
+});
+</script>
 </body>
 </html>

@@ -49,8 +49,7 @@
 <body>
 
 <div class="container mt-5">
-    <h2 class="text-center text-primary mb-4">Department Overview</h2>
-
+   <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">Department Administration</h2>
     <div class="row g-4 justify-content-center">
 
         <%

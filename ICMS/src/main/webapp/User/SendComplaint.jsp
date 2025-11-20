@@ -15,7 +15,7 @@
 </head>
 <body>
 	<div class="p-4">
-		<h3 id="send-title">Send Complaint</h3>
+		<h3 class="text-center mb-5 fw-bold" style="color: #00274d;">Send Complaints</h3>
 		<form method="post"
 			action="${pageContext.request.contextPath}/SubmitComplaintServlet"
 			enctype="multipart/form-data" onsubmit="showLoading()">

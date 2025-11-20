@@ -46,10 +46,10 @@ th {
 
 <body>
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary">Activity Logs</h2>
+    
+        <h2 class="text-center mb-5 fw-bold" style="color: #00274d;">Activity Logs</h2>
         
-    </div>
+   
 
     <div class="table-container">
     <table class="table table-bordered table-hover align-middle">
@@ -73,7 +73,7 @@ th {
                  "COALESCE(u.uName, d.deptAdmUname, s.SupAdmUname) AS username, " +
                  "l.role, l.action_type, l.action_desc, l.ip_address, l.user_agent, l.created_at " +
                  "FROM activity_log_tb l " +
-                 "LEFT JOIN login_tb u ON l.user_id = u.id_login_tb AND l.role = 'User' " +
+                 "LEFT JOIN user_tb u ON l.user_id = u.id_login_tb AND l.role = 'User' " +
                  "LEFT JOIN dept_admin_tb d ON l.user_id = d.iddept_admin_tb AND l.role = 'Admin' " +
                  "LEFT JOIN supadm_tb s ON l.user_id = s.idSupAdm_tb AND l.role = 'SupAdmin' " +
                  "ORDER BY l.created_at DESC"
@@ -112,5 +112,6 @@ th {
 
 <!-- ✅ Bootstrap Bundle JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</div>
 </body>
 </html>
