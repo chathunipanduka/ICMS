@@ -14,7 +14,7 @@
    
     
     .sidebar {
-      height: calc(100vh - 60px);
+      height: calc(100vh - 70px);
       background: #00274d; /* Darkblue Sidebar */
       padding-top: 20px;
     }
@@ -63,7 +63,7 @@ body {
       
         <a class="active" href="AdmHome.jsp" target="rightFrame"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</a>
         <a href="AdmComplaints.jsp" target="rightFrame"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Complaints</a>
-        <a href="AdmNotification.jsp" target="rightFrame"><i class="fa fa-bell"></i>&nbsp;&nbsp;Notification</a><br><br><br><br><br><br><br><br>
+        <a href="AdmNotification.jsp" target="rightFrame"><i class="fa fa-bell"></i>&nbsp;&nbsp;Notification</a>
       </nav>
       </div>
       </div>

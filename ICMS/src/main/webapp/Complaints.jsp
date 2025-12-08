@@ -26,15 +26,15 @@ if (username == null) {
 body {
 	background-color: #f7f9fb;
 	font-family: "Segoe UI", sans-serif;
-	margin: 0;
+	margin-top: 30px;
 	padding: 0;
 }
 
 /* Container Styling */
 .container {
-	margin-top: 40px;
+	margin-top: 10px;
 	background: #fff;
-	padding: 25px;
+	padding: 5px;
 	border-radius: 12px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -49,6 +49,7 @@ h2 {
 
 /* Table Styling */
 .table {
+	margin: 10px;
 	font-size: 15px;
 	word-break: break-word;
 }
@@ -138,7 +139,7 @@ th {
 </head>
 <body>
 
-	<div class="container">
+	<div >
 		<h2 class="text-center mb-5 fw-bold" style="color: #00274d;">My Submitted Complaints</h2>
 
 		<div class="table-responsive">

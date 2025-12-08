@@ -71,7 +71,7 @@ header {
 /* Iframes container */
 .iframe-container {
   display: flex;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 74px);
   overflow: hidden;
 }
 
@@ -135,7 +135,7 @@ iframe {
     top: 60px;
     left: 0;
     width: 220px;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 90px);
     background: white;
     z-index: 1000;
     transform: translateX(-100%);
@@ -314,7 +314,7 @@ background-color: #1e3a8a;
 <header>
   <div class="img-container">
     <button id="openProfileBtn" class="open-btn"><img class="userimg" src="../media/profile.png" alt="Profile"></button>
-    <p style="font-weight:normal; font-size:16px; margin-bottom:0;"><%= username %></p>
+    <p style="font-weight:normal; font-size:16px; margin-bottom:0;">&nbsp;&nbsp;<%= username %></p>
   </div>
 
   <div class="headertitle">

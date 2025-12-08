@@ -87,13 +87,13 @@ iframe {
 }
 
 .left-frame {
-  width: 18%;
+  width: 15%;
   min-width: 180px;
   transition: transform 0.3s ease;
 }
 
 .right-frame {
-  width: 82%;
+  width: 85%;
   background-color: #f8f9fa;
 }
 
@@ -272,8 +272,7 @@ body {
 </head>
 
 <body>
-<div id="google_translate_element"></div>
-  <jsp:include page="../TranslateSetup.jsp" />
+
 
 <%
     String username = (String) session.getAttribute("username");
@@ -325,6 +324,8 @@ body {
   <div class="headertitle text-center">
     Infrastructure Complaint Management System
   </div>
+  <div id="google_translate_element"></div>
+  <jsp:include page="../TranslateSetup.jsp" />
 
   <a href="<%= request.getContextPath() %>/LogoutServlet" class="logout" target="_top">Logout</a>
 </header>

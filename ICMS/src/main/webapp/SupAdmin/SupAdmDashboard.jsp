@@ -43,7 +43,7 @@ header {
 /* ===== Frames ===== */
 .iframe-container {
   display: flex;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 55px);
   overflow: hidden;
 }
 
@@ -53,12 +53,12 @@ iframe {
 }
 
 .left-frame {
-  width: 18%;
+  width: 15%;
   transition: transform 0.3s ease;
 }
 
 .right-frame {
-  width: 82%;
+  width: 85%;
   background-color: #f8f9fa;
 }
 
@@ -137,7 +137,7 @@ iframe {
   .iframe-container {
     position: relative;
     flex-direction: column;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 74px);
   }
 
   .left-frame {
