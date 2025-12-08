@@ -9,18 +9,26 @@
 <link rel="icon" type="image/x-icon" href="media/BPS_LOGO.png">
 <style>
 body {
-  font-family: 'Segoe UI', sans-serif;
-  position: relative;
-  min-height: 100vh;
-  margin: 0;
+    background-image: url('media/bpms_bg.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    
+    /* Optional: Add these for better appearance */
+    margin: 0;
+    min-height: 100vh;
 }
+
+/* Add a semi-transparent overlay for better readability */
 body::before {
-  content: "";
-  background-color: #E6F0FA;
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: -1;
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.6); /* Black overlay with 40% opacity */
+    z-index: -1; /* Place behind content */
 }
 
 /* Navbar */
@@ -121,8 +129,7 @@ footer {
 </head>
 <body>
 
-<!-- Google Translate Element -->
-<div id="google_translate_element"></div>
+
 
 <script type="text/javascript">
   function googleTranslateElementInit() {
@@ -154,10 +161,13 @@ footer {
     </button>
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav ms-auto">
+      	<li><!-- Google Translate Element -->
+<div id="google_translate_element"></div></li>
         <li class="nav-item"><a class="nav-link" href="Home.jsp">Home</a></li>
         <li class="nav-item"><a class="nav-link active" href="About.jsp">About Us</a></li>
         <li class="nav-item"><a class="nav-link" href="Login.jsp">Login</a></li>
-        <li class="nav-item"><a class="nav-link" href="Register.jsp">SignUp</a></li>
+        <li class="nav-item"><a class="nav-link" href="Register.jsp">Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="FAQ.jsp">FAQ</a></li>
       </ul>
     </div>
   </div>
