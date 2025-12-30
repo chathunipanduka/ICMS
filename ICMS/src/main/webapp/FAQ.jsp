@@ -162,6 +162,100 @@ footer {
     color: #333 !important;
     font-size: 14px !important;
   }
+  
+  
+  
+ /* Small devices (phones) */
+@media (max-width: 576px) {
+
+  .icms-header-bg {
+    font-size: 23px;   /* ↑ from 20px */
+    padding: 18px 12px;
+  }
+
+  .faq-category {
+    font-size: 18px;   /* ↑ from 16px */
+    padding: 12px 16px;
+  }
+
+  .accordion-button {
+    font-size: 16px;   /* ↑ from 14px */
+    padding: 14px;
+  }
+
+  .accordion-body {
+    font-size: 15px;   /* ↑ from 13px */
+  }
+
+  .search-box input {
+    font-size: 15px;   /* ↑ from 14px */
+    padding: 12px;
+  }
+
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  footer {
+    padding: 18px 12px;
+    text-align: center;
+  }
+
+  footer h5 {
+    font-size: 17px;   /* ↑ from 16px */
+  }
+
+  footer p, footer a {
+    font-size: 14px;   /* ↑ from 13px */
+  }
+
+  .navbar-brand span {
+    font-size: 14px;   /* ↑ from 12px */
+    line-height: 1.3;
+  }
+}
+
+/* Medium devices (tablets) */
+@media (max-width: 992px) {
+
+  .icms-header-bg {
+    font-size: 27px;   /* ↑ from 24px */
+  }
+
+  .faq-category {
+    font-size: 20px;   /* ↑ from 18px */
+  }
+
+  .accordion-button {
+    font-size: 17px;   /* ↑ from 15px */
+  }
+
+  .accordion-body {
+    font-size: 16px;   /* ↑ from 14px */
+  }
+
+  .container {
+    max-width: 96%;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+
+  .container {
+    max-width: 1100px;
+  }
+
+  .accordion-button {
+    font-size: 18px;   /* ↑ from 17px */
+  }
+
+  .accordion-body {
+    font-size: 16px;
+  }
+}
+
 
 </style>
 
