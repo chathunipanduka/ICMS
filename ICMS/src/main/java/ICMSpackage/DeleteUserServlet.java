@@ -46,9 +46,9 @@ public class DeleteUserServlet extends HttpServlet {
             int rowsAffected = ps.executeUpdate();
             
             if (rowsAffected > 0) {
-                request.setAttribute("successMessage", "User deleted successfully!");
+                session.setAttribute("successMessage", "User deleted successfully!");
             } else {
-                request.setAttribute("errorMessage", "User not found or already deleted!");
+            	session.setAttribute("errorMessage", "User not found or already deleted!");
             }
             
         } catch (NumberFormatException e) {
@@ -57,13 +57,14 @@ public class DeleteUserServlet extends HttpServlet {
         } catch (SQLException e) {
             // Check if it's a foreign key constraint violation
             if (e.getMessage().contains("foreign key constraint")) {
-                request.setAttribute("errorMessage", "Cannot delete user. This user has related records in the system.");
+            	
+            	session.setAttribute("errorMessage", "Cannot delete user. This user has related records.");
             } else {
-                request.setAttribute("errorMessage", "Database error: " + e.getMessage());
+            	session.setAttribute("errorMessage", "Database error: " + e.getMessage());
             }
             e.printStackTrace();
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "System error: " + e.getMessage());
+        	session.setAttribute("errorMessage", "System error: " + e.getMessage());
             e.printStackTrace();
         } finally {
             try { if (ps != null) ps.close(); } catch (Exception ignored) {}
@@ -71,6 +72,6 @@ public class DeleteUserServlet extends HttpServlet {
         }
         
         // Redirect back to users list
-        response.sendRedirect(request.getContextPath() + "/SupAdmin/UserManage.jsp");
+        request.getRequestDispatcher("/SupAdmin/UserManage.jsp").forward(request, response);
     }
 }
