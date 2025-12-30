@@ -295,7 +295,7 @@ footer {
 <div class="container my-5">
   <div class="complaint-section">
     <h3 id="form-title" class="mb-4 text-center">Send Complaint Anonymously</h3>
-    <form action="AnonymousSubmitComplaintServlet" method="post" enctype="multipart/form-data">
+    <form action="AnonymousSubmitComplaintServlet" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
       
       <div class="mb-3">
         <label class="form-label">Category</label>
@@ -326,15 +326,15 @@ footer {
       </div>
       <div class="mb-3">
         <label id="lbl-complaint" class="form-label">Enter Complaint and Other Details</label>
-        <textarea class="form-control" rows="3" name="description" placeholder="Example: Broken Light, Tower 18, Nearby Reception hall"></textarea>
+        <textarea class="form-control" rows="3" name="description" placeholder="Example: Broken Light, Tower 18, Nearby Reception hall" required></textarea>
       </div>
       <div class="mb-3">
         <label id="lbl-media" class="form-label">Upload Media</label>
-        <input type="file" class="form-control" name="media" multiple>
+        <input type="file" class="form-control" name="media" multiple accept=".jpg,.jpeg,.png,.mp4,.mov,.pdf">
       </div>
       <div class="mb-3">
         <label id="lbl-location" class="form-label">Tag Location</label>
-        <input type="text" class="form-control" placeholder="Example: Exact Location(Malwana Tower18) or Landmark(Near the Malwana water tank)" name="location">
+        <input type="text" class="form-control" placeholder="Example: Exact Location(Malwana Tower18) or Landmark(Near the Malwana water tank)" name="location" required>
       </div>
       <small id="private-reply" class="text-muted">If you want a private reply, please <a href="Login.jsp" id="login-link">Login here</a></small>
       <button type="submit" class="btn btn-primary w-100 mt-3" id="btn-submit">Submit Complaint</button>
@@ -443,6 +443,39 @@ footer {
     <div class="text-center pb-3">&copy; 2025 Biyagama Pradeshiya Sabha. All rights reserved.</div>
   </div>
 </footer>
+
+
+<script>
+function validateForm() {
+  const category = document.querySelector('select[name="category"]').value.trim();
+  const description = document.querySelector('textarea[name="description"]').value.trim();
+  const location = document.querySelector('input[name="location"]').value.trim();
+  const files = document.querySelector('input[name="media"]').files;
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "video/mp4",
+    "video/quicktime",
+    "application/pdf"
+  ];
+
+  if (category === "" || description === "" || location === "") {
+    alert("Please fill all required fields before submitting the complaint.");
+    return false;
+  }
+
+  // File type validation (optional upload)
+  for (let i = 0; i < files.length; i++) {
+    if (!allowedTypes.includes(files[i].type)) {
+      alert("Invalid file type. Only JPG, PNG, MP4, MOV or PDF files are allowed.");
+      return false;
+    }
+  }
+
+}
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

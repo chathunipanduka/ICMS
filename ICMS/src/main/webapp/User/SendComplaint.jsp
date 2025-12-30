@@ -18,7 +18,8 @@
 		<h3 class="text-center mb-5 fw-bold" style="color: #00274d;">Send Complaints</h3>
 		<form method="post"
 			action="${pageContext.request.contextPath}/SubmitComplaintServlet"
-			enctype="multipart/form-data" onsubmit="showLoading()">
+			enctype="multipart/form-data" onsubmit="return validateForm();"
+			>
 			
 			<div class="mb-3">
         <label class="form-label">Category</label>
@@ -51,15 +52,15 @@
       </div>
       <div class="mb-3">
 				<label id="lbl-complaint">Enter Complaint and Other Details</label>
-				<textarea name="description" class="form-control" rows="3" placeholder="Example: Broken Light, Tower 18, Nearby Reception hall"></textarea>
+				<textarea name="description" class="form-control" rows="3" placeholder="Example: Broken Light, Tower 18, Nearby Reception hall" required></textarea>
 			</div>
 			<div class="mb-3">
-				<label id="lbl-media">Upload Media</label> <input type="file"
-					class="form-control" name="media" multiple>
+				<label id="lbl-media">Upload Media</label> 
+				<input type="file" class="form-control" name="media" multiple accept=".jpg,.jpeg,.png,.mp4,.mov,.pdf">
 			</div>
 			<div class="mb-3">
 				<label id="lbl-location">Location</label> 
-				<input type="text" class="form-control"  name="location" placeholder="Example: Exact Location(Malwana Tower18) or Landmark(Near the Malwana water tank)">
+				<input type="text" class="form-control"  name="location" placeholder="Example: Exact Location(Malwana Tower18) or Landmark(Near the Malwana water tank)" required>
 			</div>
 			<button type="submit" class="btn btn-primary" id="btn-submit">Submit
 				Complaint</button>
@@ -155,6 +156,40 @@ translationsSend[lang]["category-select"].forEach(opt => {
   select.add(option);
 });
 </script>
+
+<script>
+function validateForm() {
+  const category = document.querySelector('select[name="category"]').value.trim();
+  const description = document.querySelector('textarea[name="description"]').value.trim();
+  const location = document.querySelector('input[name="location"]').value.trim();
+  const files = document.querySelector('input[name="media"]').files;
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "video/mp4",
+    "video/quicktime",
+    "application/pdf"
+  ];
+
+  if (category === "" || description === "" || location === "") {
+    alert("Please fill all required fields before submitting the complaint.");
+    return false;
+  }
+
+  // File type validation (optional upload)
+  for (let i = 0; i < files.length; i++) {
+    if (!allowedTypes.includes(files[i].type)) {
+      alert("Invalid file type. Only JPG, PNG, MP4, MOV or PDF files are allowed.");
+      return false;
+    }
+  }
+
+  showLoading();
+  return true;
+}
+</script>
+
 
 </body>
 </html>
