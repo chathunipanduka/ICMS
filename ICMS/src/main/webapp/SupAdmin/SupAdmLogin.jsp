@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Super Admin Login - ICMS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="../media/ICMS.png">
+  <link rel="icon" type="image/x-icon" href="../media/BPS_LOGO.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
@@ -122,7 +122,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold d-flex align-items-center" href="Home.jsp">
-      <img src="../media/ICMS.png" alt="Logo" width="40" class="me-2">
+      <img src="../media/BPS_LOGO.png" alt="Logo" width="40" class="me-2">
       <span id="header-title">Infrastructure Complaint Management System</span>
     </a>
   </div>
