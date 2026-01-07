@@ -56,8 +56,8 @@ th {
         <thead>
             <tr>
                 <th>ID</th>
-                <th>User</th>
                 <th>Role</th>
+                <th>User</th>
                 <th>Action</th>
                 <th>Description</th>
                 <th>IP Address</th>
