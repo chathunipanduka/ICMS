@@ -18,132 +18,185 @@ if (username == null) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Complaints</title>
 
-<!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <style>
+/* =======================
+   BASE UI
+   ======================= */
 body {
-	background-color: #f7f9fb;
+	background: linear-gradient(135deg, #f4f7fb, #eef2f7);
 	font-family: "Segoe UI", sans-serif;
-	margin-top: 30px;
-	padding: 0;
+	margin-top: 20px;
 }
 
-/* Container Styling */
-.container {
-	margin-top: 10px;
-	background: #fff;
-	padding: 5px;
-	border-radius: 12px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Card container */
+.page-card {
+	background: #ffffff;
+	border-radius: 16px;
+	padding: 20px;
+	box-shadow: 0 15px 40px rgba(0,0,0,0.08);
 }
 
-/* Header */
+/* Title */
 h2 {
-	color: #003366;
-	margin-bottom: 25px;
-	text-align: center;
-	font-size: 1.8rem;
+	color: #00274d;
+	font-weight: 700;
+	letter-spacing: 0.5px;
 }
 
-/* Table Styling */
+/* =======================
+   TABLE UX
+   ======================= */
 .table {
-	margin: 10px;
 	font-size: 15px;
-	word-break: break-word;
+	border-collapse: separate;
+	border-spacing: 0 10px;
 }
 
-th {
-	background-color: #003366;
-	color: white;
-	font-weight: 600;
+thead th {
+	background: #00274d;
+	color: #fff;
+	border: none;
+	padding: 14px;
 }
 
-.media-preview {
-	width: 80px;
-	height: 80px;
-	border-radius: 8px;
-	object-fit: cover;
-	transition: transform 0.2s, box-shadow 0.2s;
-	cursor: pointer;
+tbody tr {
+	background: #ffffff;
+	box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+	border-radius: 12px;
+	transition: transform 0.15s ease;
 }
 
-.media-preview:hover {
-	transform: scale(1.05);
-	box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+tbody tr:hover {
+	transform: translateY(-3px);
 }
 
-.no-media {
-	color: #999;
-	font-size: 13px;
+td {
+	border: none;
+	vertical-align: middle;
+	padding: 14px;
 }
 
+/* =======================
+   STATUS BADGES
+   ======================= */
 .status {
-	font-weight: bold;
+	padding: 6px 12px;
+	border-radius: 20px;
+	font-size: 13px;
+	font-weight: 600;
+	display: inline-block;
 }
 
 .status.pending {
-	color: #e69500;
+	background: #fff3cd;
+	color: #856404;
 }
 
 .status.solved {
-	color: #28a745;
+	background: #d4edda;
+	color: #155724;
 }
 
 .status.inprogress {
-	color: #dc3545;
+	background: #f8d7da;
+	color: #721c24;
 }
 
-/* Responsive Table Wrapper */
-.table-responsive {
-	border-radius: 10px;
-	overflow-x: auto;
-}
-
-/* ⭐ Rating Styles */
-.rating-stars i {
-	font-size: 1.3rem;
+/* =======================
+   MEDIA
+   ======================= */
+.media-preview {
+	width: 70px;
+	height: 70px;
+	border-radius: 12px;
+	object-fit: cover;
 	cursor: pointer;
-	color: #ccc;
-	transition: color 0.2s;
+	box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+	transition: transform 0.2s ease;
 }
-.rating-stars i.active,
-.rating-stars i:hover,
-.rating-stars i:hover ~ i {
+
+.media-preview:hover {
+	transform: scale(1.08);
+}
+
+/* =======================
+   RATING
+   ======================= */
+.rating-stars i {
+	font-size: 1.2rem;
+	color: #ccc;
+	cursor: pointer;
+}
+
+.rating-stars i.bi-star-fill {
 	color: #ffc107;
 }
 
-/* Action Buttons */
+/* =======================
+   BUTTONS
+   ======================= */
 .btn-action {
-	padding: 4px 8px;
+	border-radius: 20px;
 	font-size: 13px;
-	margin: 2px;
+	padding: 6px 12px;
 }
 
-/* ===== Responsive Breakpoints ===== */
-@media (max-width: 992px) {
-	h2 { font-size: 1.6rem; }
-	.media-preview { width: 65px; height: 65px; }
-	.table { font-size: 14px; }
-}
-
+/* =======================
+   MOBILE UX
+   ======================= */
 @media (max-width: 768px) {
-	.container { padding: 15px; margin-top: 25px; }
-	h2 { font-size: 1.4rem; }
-	th, td { font-size: 13px; padding: 8px; }
-	.media-preview { width: 60px; height: 60px; }
-	footer { font-size: 12px; padding: 10px; line-height: 1.4; }
+
+	h2 {
+		font-size: 1.4rem;
+	}
+
+	.table {
+		font-size: 13px;
+	}
+
+	td, th {
+		padding: 10px;
+	}
+
+	.btn-action {
+		width: 100%;
+		margin-bottom: 6px;
+	}
+
+	.media-preview {
+		width: 55px;
+		height: 55px;
+	}
+}
+
+@media (max-width: 576px) {
+
+	h2 {
+		font-size: 1.25rem;
+	}
+
+	.table {
+		font-size: 12px;
+	}
+
+	.media-preview {
+		width: 48px;
+		height: 48px;
+	}
 }
 </style>
 </head>
 <body>
 
-	<div >
-		<h2 class="text-center mb-5 fw-bold" style="color: #00274d;">My Submitted Complaints</h2>
+<div class="container">
+	<div class="page-card">
+		<h2 class="text-center mb-4">My Submitted Complaints</h2>
 
 		<div class="table-responsive">
-			<table class="table table-bordered table-hover align-middle text-center">
+			<table class="table align-middle text-center">
 				<thead>
 					<tr>
 						<th>ID</th>
@@ -153,10 +206,11 @@ th {
 						<th>Media</th>
 						<th>Date/Time</th>
 						<th>Rating</th>
-						<th>Actions</th> <!-- Added Actions column -->
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
+
 					<%
 					Connection conn = null;
 					PreparedStatement ps = null;
@@ -439,6 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+</div>
 
 <!-- Footer -->
 <footer class="text-light pt-4" style="background-color: #00274d; width: 99.5%; padding:15px;">
