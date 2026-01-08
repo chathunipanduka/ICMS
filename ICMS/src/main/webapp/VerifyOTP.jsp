@@ -40,6 +40,7 @@ button {
 <body>
 <div class="card">
   <h3>OTP Verification</h3>
+  <p>The system will send a verification code to the email address you provided.</p>
   <form action="VerifyOTPServlet" method="post">
     <input type="text" name="otp" placeholder="Enter your OTP" required>
     <button type="submit">Verify</button>

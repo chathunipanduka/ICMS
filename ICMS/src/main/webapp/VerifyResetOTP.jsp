@@ -8,6 +8,7 @@
 <div class="container mt-5">
   <div class="card p-4 shadow-sm">
     <h3>Verify OTP</h3>
+    <p>The system will send a RESET verification code to the email address you provided.</p>
     <form action="VerifyResetOTPServlet" method="post">
       <div class="mb-3">
         <label for="otp" class="form-label">Enter OTP</label>
